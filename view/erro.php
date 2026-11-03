@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro</title>
+</head>
+<body>
+    <h1>Ocorreu um erro</h1>
+    <p>O contato solicitado não foi encontrado ou o pedido é inválido.</p>
+    <a href="index.php">Voltar para a lista de contatos</a>
+</body>
+</html>
