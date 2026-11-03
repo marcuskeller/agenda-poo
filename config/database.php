@@ -1,24 +1,19 @@
 <?php
+// Configurações do banco de dados
+$host = "localhost";
+$username = "root";
+$password = "senha-db";
+$database = "agenda";
+$port = 3308;
 
-// Responsável pelas credenciais e por abrir a conexão com o banco de dados.
-class Database
-{
-    // ": mysqli" é o tipo de retorno: garante que essa função sempre devolve uma conexão mysqli
-    public static function getConexao(): mysqli
-    {
-        $host = "localhost";
-        $username = "root";
-        $password = "";
-        $database = "agenda";
+// Criar conexão
+$conn = mysqli_connect($host, $username, $password, $database, $port);
 
-        $conexao = mysqli_connect($host, $username, $password, $database);
-
-        if (!$conexao) {
-            die("Falha na conexão: " . mysqli_connect_error());
-        }
-
-        mysqli_set_charset($conexao, "utf8");
-
-        return $conexao;
-    }
+// Verificar conexão
+if (!$conn) {
+    die("Falha na conexão: " . mysqli_connect_error());
 }
+
+// Definir charset para utf8
+mysqli_set_charset($conn, "utf8");
+?>
