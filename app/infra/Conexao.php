@@ -2,7 +2,7 @@
 // Configurações do banco de dados
 $host = "localhost";
 $username = "root";
-$password = "senha-db";
+$password = "";
 $database = "agenda";
 $port = 3308;
 

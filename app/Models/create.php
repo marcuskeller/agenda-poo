@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once 'config/database.php';
+require_once '../infra/Conexao.php';
 
 // Inicializar variáveis
 $nome = $telefone = $email = "";

@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once 'config/database.php';
+require_once "../Views/index.php";
 
 // Consulta para selecionar todos os contatos
 $sql = "SELECT * FROM contatos ORDER BY nome ASC";
