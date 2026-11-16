@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once 'config/database.php';
+require_once '../infra/Conexao.php';
 
 // Processar dados do formulário quando for enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Tentar executar a declaração preparada
         if (mysqli_stmt_execute($stmt)) {
             // Registros atualizados com sucesso. Redirecionar para a página principal
-            header("location: index.php");
+            header("location: ../Views/index.php");
             exit();
         } else {
             echo "Oops! Algo deu errado. Por favor, tente novamente mais tarde.";
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_close($conn);
 } else {
     // Se não for uma solicitação POST, redirecionar para a página principal
-    header("location: index.php");
+    header("location: ../Views/index.php");
     exit();
 }
 ?>
