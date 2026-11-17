@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <div>
             <input type="submit" value="Adicionar">
-            <a href="index.php">Cancelar</a>
+            <a href="../../Views/HomePage/index.php">Cancelar</a>
         </div>
     </form>
 </body>
