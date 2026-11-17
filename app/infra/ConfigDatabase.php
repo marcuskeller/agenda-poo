@@ -2,9 +2,9 @@
 // Configurações do banco de dados
 $host = "localhost";
 $username = "root";
-$password = "";
+$password = "root";
 $database = "agenda";
-$port = 3308;
+$port = 3309;
 
 // Criar conexão
 $conn = mysqli_connect($host, $username, $password, $database, $port);
