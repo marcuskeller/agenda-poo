@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once '../infra/Conexao.php';
+require_once '../../infra/ConfigDatabase.php';
 
 // Processar dados do formulário quando for enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

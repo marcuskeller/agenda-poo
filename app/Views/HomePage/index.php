@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once "../Views/index.php";
+require_once "../../infra/ConfigDatabase.php";
 
 // Consulta para selecionar todos os contatos
 $sql = "SELECT * FROM contatos ORDER BY nome ASC";
@@ -22,7 +22,7 @@ if (!$result) {
 <body>
     <h1>Agenda Telefônica</h1>
     
-    <a href="create.php">Adicionar Novo Contato</a>
+    <a href="../../Models/Users/create.php">Adicionar Novo Contato</a>
     
     <h2>Lista de Contatos</h2>
     
@@ -47,8 +47,8 @@ if (!$result) {
                         <td><?php echo $row['email']; ?></td>
                         <td><?php echo date('d/m/Y H:i', strtotime($row['data_cadastro'])); ?></td>
                         <td>
-                            <a href="edit.php?id=<?php echo $row['id']; ?>">Editar</a> | 
-                            <a href="delete.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir este contato?');">Excluir</a>
+                            <a href="../../Models/Users/edit.php?id=<?php echo $row['id']; ?>">Editar</a> |
+                            <a href="../../Models/Users/delete.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir este contato?');">Excluir</a>
                         </td>
                     </tr>
                 <?php endwhile; ?>

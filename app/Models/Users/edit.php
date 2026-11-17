@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once '../infra/Conexao.php';
+require_once '../../infra/ConfigDatabase.php';
 
 // Verificar se o ID foi passado
 if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
@@ -81,7 +81,7 @@ if (isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
         
         <div>
             <input type="submit" value="Atualizar">
-            <a href="../Views/index.php">Cancelar</a>
+            <a href="../../Views/HomePage/index.php">Cancelar</a>
         </div>
     </form>
 </body>

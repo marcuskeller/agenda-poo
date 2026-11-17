@@ -8,6 +8,6 @@
 <body>
     <h1>Ocorreu um erro</h1>
     <p>O contato solicitado não foi encontrado ou o pedido é inválido.</p>
-    <a href="index.php">Voltar para a lista de contatos</a>
+    <a href="../HomePage/index.php">Voltar para a lista de contatos</a>
 </body>
 </html>
