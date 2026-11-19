@@ -1,6 +1,6 @@
 <?php
 // Incluir arquivo de conexão
-require_once '../infra/Conexao.php';
+require_once '../../infra/ConfigDatabase.php';
 
 // Inicializar variáveis
 $nome = $telefone = $email = "";
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <div>
             <input type="submit" value="Adicionar">
-            <a href="index.php">Cancelar</a>
+            <a href="../../Views/HomePage/index.php">Cancelar</a>
         </div>
     </form>
 </body>
