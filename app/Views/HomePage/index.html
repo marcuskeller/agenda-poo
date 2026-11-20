@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contatos | Agenda Telefônica</title>
-    <link rel="stylesheet" href="assets/agenda.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <header class="site-header">
@@ -16,28 +16,84 @@
             </span>
         </a>
         <span class="header-caption">Organização pessoal / 01</span>
-        <a class="header-link" href="formulario.html"><span class="header-link-mark" aria-hidden="true">+</span> Novo contato</a>
+        <a class="header-link" href="../CreateContact/index.html"><span class="header-link-mark" aria-hidden="true">+</span> Novo contato</a>
     </header>
 
     <main class="page-shell">
         <section class="page-intro" aria-labelledby="page-title">
             <div>
                 <p class="eyebrow">Visão geral</p>
-                <h1 id="page-title">Contatos</h1>
+                <h1 id="page-title">Contatos <span class="count-mark">3</span></h1>
             </div>
         </section>
 
         <section class="surface" aria-labelledby="contacts-title">
             <div class="surface-heading">
                 <h2 class="surface-title" id="contacts-title">Sua agenda</h2>
+                <span class="record-count">3 registros</span>
             </div>
-            <div class="empty-state">
-                <span class="empty-mark" aria-hidden="true">A</span>
-                <h3 class="empty-title">Sua agenda está vazia</h3>
-                <p class="empty-copy">A lista de contatos estará disponível após a conexão com o backend.</p>
-                <a class="button-primary" href="formulario.html">Adicionar contato</a>
+
+            <div class="table-scroll">
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Telefone</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Cadastro</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="contact-id" data-label="ID">#001</td>
+                            <td class="contact-name" data-label="Nome">Marina Oliveira</td>
+                            <td data-label="Telefone">(11) 90000-0101</td>
+                            <td class="contact-email" data-label="E-mail">marina@exemplo.com</td>
+                            <td class="contact-date" data-label="Cadastro">09/11/2026 às 09:15</td>
+                            <td data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="row-action" href="../EditContact/index.html">Editar</a>
+                                    <a class="row-action row-action--delete" href="../DeleteContact/index.html">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="contact-id" data-label="ID">#002</td>
+                            <td class="contact-name" data-label="Nome">Rafael Santos</td>
+                            <td data-label="Telefone">(21) 90000-0102</td>
+                            <td class="contact-email" data-label="E-mail">rafael@exemplo.com</td>
+                            <td class="contact-date" data-label="Cadastro">08/11/2026 às 16:40</td>
+                            <td data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="row-action" href="../EditContact/index.html">Editar</a>
+                                    <a class="row-action row-action--delete" href="../DeleteContact/index.html">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="contact-id" data-label="ID">#003</td>
+                            <td class="contact-name" data-label="Nome">Clara Almeida</td>
+                            <td data-label="Telefone">(31) 90000-0103</td>
+                            <td class="contact-email" data-label="E-mail">clara@exemplo.com</td>
+                            <td class="contact-date" data-label="Cadastro">07/11/2026 às 11:05</td>
+                            <td data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="row-action" href="../EditContact/index.html">Editar</a>
+                                    <a class="row-action row-action--delete" href="../DeleteContact/index.html">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
     </main>
+
+    <footer class="site-footer">
+        <span>agenda / Caderno de contatos</span>
+        <span>Organização pessoal</span>
+    </footer>
 </body>
 </html>

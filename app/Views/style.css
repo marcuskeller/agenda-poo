@@ -194,12 +194,12 @@ h1 {
 
 .count-mark {
     display: inline-grid;
-    min-width: 37px;
-    height: 37px;
+    min-width: 34px;
+    height: 34px;
     place-items: center;
     margin-left: 8px;
-    padding: 0 9px;
-    border-radius: 50%;
+    padding: 0 8px;
+    border-radius: 8px;
     color: var(--forest-deep);
     background: var(--lime);
     font-family: "Trebuchet MS", "Lucida Sans Unicode", sans-serif;
@@ -743,6 +743,169 @@ h1 {
     .site-footer {
         width: calc(100% - 32px);
         font-size: 9px;
+    }
+}
+
+.field-hint {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.notice--success {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-left-color: #6f9c3e;
+    background: #e9f4d8;
+}
+
+.notice-mark {
+    color: #4d7427;
+    font-weight: 700;
+}
+
+.button-secondary {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    color: var(--ink);
+    background: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.button-secondary:hover {
+    border-color: var(--forest);
+    background: #f6f9f1;
+}
+
+.button-danger {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border: 1px solid var(--danger);
+    border-radius: 5px;
+    color: #fff;
+    background: var(--danger);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.button-danger:hover {
+    border-color: #8a3126;
+    background: #8a3126;
+}
+
+.button-danger-outline {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border: 1px solid var(--danger);
+    border-radius: 5px;
+    color: var(--danger);
+    background: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.button-danger-outline:hover {
+    background: #fdf0ed;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(18, 54, 38, 0.38);
+    z-index: 50;
+}
+
+.modal-scrim {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+}
+
+.modal {
+    position: relative;
+    width: min(420px, 100%);
+    padding: 32px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: 0 24px 64px rgba(18, 54, 38, 0.28);
+    animation: arrive 240ms ease both;
+}
+
+.modal-marker {
+    margin: 0 0 10px;
+    color: var(--danger);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.modal-title {
+    margin: 0 0 12px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.15;
+}
+
+.modal-copy {
+    margin: 0 0 6px;
+    font-size: 14px;
+}
+
+.modal-copy--note {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+@media (max-width: 520px) {
+    .modal {
+        padding: 24px 20px;
+    }
+
+    .modal-title {
+        font-size: 22px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .button-secondary,
+    .modal-actions .button-danger {
+        width: 100%;
     }
 }
 
