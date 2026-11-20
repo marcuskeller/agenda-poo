@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir contato | Agenda Telefônica</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Agenda, ir para contatos">
+            <span class="brand-mark" aria-hidden="true">A</span>
+            <span class="brand-copy">
+                <span class="brand-name">agenda</span>
+                <span class="brand-caption">Caderno de contatos</span>
+            </span>
+        </a>
+        <span class="header-caption">Organização pessoal / 01</span>
+        <a class="header-link" href="../CreateContact/index.html"><span class="header-link-mark" aria-hidden="true">+</span> Novo contato</a>
+    </header>
+
+    <main class="page-shell">
+        <section class="page-intro" aria-labelledby="page-title">
+            <div>
+                <p class="eyebrow">Visão geral</p>
+                <h1 id="page-title">Contatos <span class="count-mark">3</span></h1>
+            </div>
+        </section>
+
+        <section class="surface" aria-labelledby="contacts-title">
+            <div class="surface-heading">
+                <h2 class="surface-title" id="contacts-title">Sua agenda</h2>
+                <span class="record-count">3 registros</span>
+            </div>
+
+            <div class="table-scroll">
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Telefone</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Cadastro</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="contact-id" data-label="ID">#001</td>
+                            <td class="contact-name" data-label="Nome">Marina Oliveira</td>
+                            <td data-label="Telefone">(11) 90000-0101</td>
+                            <td class="contact-email" data-label="E-mail">marina@exemplo.com</td>
+                            <td class="contact-date" data-label="Cadastro">09/11/2026 às 09:15</td>
+                            <td data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="row-action" href="../EditContact/index.html">Editar</a>
+                                    <a class="row-action row-action--delete" href="index.html">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="contact-id" data-label="ID">#002</td>
+                            <td class="contact-name" data-label="Nome">Rafael Santos</td>
+                            <td data-label="Telefone">(21) 90000-0102</td>
+                            <td class="contact-email" data-label="E-mail">rafael@exemplo.com</td>
+                            <td class="contact-date" data-label="Cadastro">08/11/2026 às 16:40</td>
+                            <td data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="row-action" href="../EditContact/index.html">Editar</a>
+                                    <a class="row-action row-action--delete" href="index.html">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="contact-id" data-label="ID">#003</td>
+                            <td class="contact-name" data-label="Nome">Clara Almeida</td>
+                            <td data-label="Telefone">(31) 90000-0103</td>
+                            <td class="contact-email" data-label="E-mail">clara@exemplo.com</td>
+                            <td class="contact-date" data-label="Cadastro">07/11/2026 às 11:05</td>
+                            <td data-label="Ações">
+                                <div class="row-actions">
+                                    <a class="row-action" href="../EditContact/index.html">Editar</a>
+                                    <a class="row-action row-action--delete" href="index.html">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <span>agenda / Caderno de contatos</span>
+        <span>Organização pessoal</span>
+    </footer>
+
+    <div class="modal-overlay">
+        <a class="modal-scrim" href="../HomePage/index.html" aria-label="Cancelar exclusão"></a>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+            <p class="modal-marker">! Confirmar exclusão</p>
+            <h2 class="modal-title" id="modal-title">Excluir contato?</h2>
+            <p class="modal-copy" id="modal-desc">Deseja excluir Marina Oliveira da sua agenda?</p>
+            <p class="modal-copy modal-copy--note">Esta ação não pode ser desfeita.</p>
+            <div class="modal-actions">
+                <a class="button-secondary" href="../HomePage/index.html">Cancelar</a>
+                <a class="button-danger-outline" href="../../Controller/Users/UsersController.php?action=delete&id=1">Confirmar exclusão</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
