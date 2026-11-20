@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../../infra/ConfigDatabase.php';
 require_once __DIR__ . '/../../Models/Users/create.php';
+require_once __DIR__ . '/../../Models/Users/edit.php';
 require_once __DIR__ . '/../../Models/Users/update.php';
 require_once __DIR__ . '/../../Models/Users/delete.php';
 
@@ -10,19 +11,17 @@ $lista = $views . '/HomePage/index.html';
 $erro = $views . '/GlobalMessages/erro.html';
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
+$id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
 
 $dados = [
-    'usuario_id' => 1,
     'nome' => trim($_POST['nome'] ?? ''),
     'telefone' => trim($_POST['telefone'] ?? ''),
     'email' => trim($_POST['email'] ?? ''),
 ];
 
-$id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
-
 switch ($action) {
     case 'create':
-        $destino = createContato($conn, $dados)
+        $destino = criarContato($conn, $dados)
             ? $lista . '?msg=criado'
             : $views . '/CreateContact/index-erro.html';
         break;
