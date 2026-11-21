@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../Models/Users/update.php';
 require_once __DIR__ . '/../../Models/Users/delete.php';
 
 $views = '../../Views';
-$lista = $views . '/HomePage/index.html';
+$lista = $views . '/HomePage/index.php';
 $erro = $views . '/GlobalMessages/erro.html';
 
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
