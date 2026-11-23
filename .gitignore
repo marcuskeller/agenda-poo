@@ -1,0 +1,38 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.idea/
+.vscode/
+.fleet/
+nbproject/
+*.iml
+*.ipr
+*.iws
+*.sublime-workspace
+
+# Agent / tooling artifacts
+.omo/
+.codegraph/
+.claude/
+.opencode/
+
+# Temp
+*.tmp
+*.bak
+*.swp

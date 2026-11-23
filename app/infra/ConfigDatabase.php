@@ -1,19 +1,14 @@
 <?php
-// Configurações do banco de dados
-$host = "localhost";
-$username = "root";
-$password = "root";
-$database = "agenda";
-$port = 3309;
+$host     = 'localhost';
+$port     = 3309;
+$username = 'root';
+$password = 'root';
+$database = 'agenda';
 
-// Criar conexão
 $conn = mysqli_connect($host, $username, $password, $database, $port);
 
-// Verificar conexão
 if (!$conn) {
     die("Falha na conexão: " . mysqli_connect_error());
 }
 
-// Definir charset para utf8
 mysqli_set_charset($conn, "utf8");
-?>
