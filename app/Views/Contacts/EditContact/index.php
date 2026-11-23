@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../infra/ConfigDatabase.php';
-require_once __DIR__ . '/../../Models/Users/edit.php';
+require_once __DIR__ . '/../../../Infra/ConfigDatabase.php';
+require_once __DIR__ . '/../../../Models/Users/edit.php';
 
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 
@@ -9,9 +9,15 @@ $id = (int) ($_GET['id'] ?? 0);
 $contato = buscarContato($conn, $id);
 
 if ($contato === null) {
-    header('Location: ../GlobalMessages/erro.html');
+    header('Location: ../../GlobalMessages/erro.php');
     exit;
 }
+
+$brandHref = '../listContats/index.php';
+$headerCaption = 'Organização pessoal / 03';
+$headerLinkHref = '../listContats/index.php';
+$headerLinkText = 'Todos os contatos';
+$showPlus = false;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -19,20 +25,10 @@ if ($contato === null) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar contato | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" href="../HomePage/index.php" aria-label="Agenda, ir para contatos">
-            <span class="brand-mark" aria-hidden="true">A</span>
-            <span class="brand-copy">
-                <span class="brand-name">agenda</span>
-                <span class="brand-caption">Caderno de contatos</span>
-            </span>
-        </a>
-        <span class="header-caption">Organização pessoal / 03</span>
-        <a class="header-link" href="../HomePage/index.php">Todos os contatos</a>
-    </header>
+<?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
 
     <main class="page-shell form-shell">
         <section class="page-intro" aria-labelledby="page-title">
@@ -46,7 +42,7 @@ if ($contato === null) {
             <p class="form-section-label">Informações pessoais</p>
             <p class="form-note">* Campos obrigatórios</p>
 
-            <form action="../../Controller/Users/UsersController.php" method="post">
+            <form action="../../../Controller/Users/UsersController.php" method="post">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" name="id" value="<?= (int) $contato['id'] ?>">
 
@@ -73,7 +69,7 @@ if ($contato === null) {
                 <div class="form-actions">
                     <p class="form-note"><span class="required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
                     <div class="form-action-group">
-                        <a class="button-link" href="../HomePage/index.php">Cancelar</a>
+                        <a class="button-link" href="../listContats/index.php">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar alterações</button>
                     </div>
                 </div>
@@ -81,9 +77,6 @@ if ($contato === null) {
         </section>
     </main>
 
-    <footer class="site-footer">
-        <span>agenda / Caderno de contatos</span>
-        <span>Organização pessoal</span>
-    </footer>
+<?php require_once __DIR__ . '/../../Components/footer.php'; ?>
 </body>
 </html>

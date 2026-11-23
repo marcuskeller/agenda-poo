@@ -1,23 +1,21 @@
+<?php
+
+$brandHref = '../listContats/index.php';
+$headerCaption = 'Organização pessoal / 02';
+$headerLinkHref = '../listContats/index.php';
+$headerLinkText = 'Todos os contatos';
+$showPlus = false;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar contato | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" href="../HomePage/index.php" aria-label="Agenda, ir para contatos">
-            <span class="brand-mark" aria-hidden="true">A</span>
-            <span class="brand-copy">
-                <span class="brand-name">agenda</span>
-                <span class="brand-caption">Caderno de contatos</span>
-            </span>
-        </a>
-        <span class="header-caption">Organização pessoal / 02</span>
-        <a class="header-link" href="../HomePage/index.php">Todos os contatos</a>
-    </header>
+<?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
 
     <main class="page-shell form-shell">
         <section class="page-intro" aria-labelledby="page-title">
@@ -31,20 +29,18 @@
             <p class="form-section-label">Informações pessoais</p>
             <p class="form-note">* Campos obrigatórios</p>
 
-            <form action="../../Controller/Users/UsersController.php" method="post" novalidate>
+            <form action="../../../Controller/Users/UsersController.php" method="post">
                 
                 <input type="hidden" name="action" value="create">
 <div class="form-grid">
                     <div class="field field--wide">
                         <label class="field-label" for="nome">Nome <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="nome" name="nome" type="text" maxlength="100" autocomplete="name" aria-invalid="true" aria-describedby="nome-erro">
-                        <p class="field-error" id="nome-erro">Erro: informe o nome.</p>
+                        <input class="field-input" id="nome" name="nome" type="text" maxlength="100" autocomplete="name" required placeholder="Nome completo">
                         <p class="field-hint">Máximo de 100 caracteres</p>
                     </div>
                     <div class="field">
                         <label class="field-label" for="telefone">Telefone <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="telefone" name="telefone" type="tel" maxlength="20" autocomplete="tel" aria-invalid="true" aria-describedby="telefone-erro">
-                        <p class="field-error" id="telefone-erro">Erro: informe o telefone.</p>
+                        <input class="field-input" id="telefone" name="telefone" type="tel" maxlength="20" autocomplete="tel" required placeholder="(00) 00000-0000">
                         <p class="field-hint">Máximo de 20 caracteres</p>
                     </div>
                     <div class="field">
@@ -59,7 +55,7 @@
                 <div class="form-actions">
                     <p class="form-note"><span class="required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
                     <div class="form-action-group">
-                        <a class="button-link" href="../HomePage/index.php">Cancelar</a>
+                        <a class="button-link" href="../listContats/index.php">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar contato</button>
                     </div>
                 </div>
@@ -67,9 +63,6 @@
         </section>
     </main>
 
-    <footer class="site-footer">
-        <span>agenda / Caderno de contatos</span>
-        <span>Organização pessoal</span>
-    </footer>
+<?php require_once __DIR__ . '/../../Components/footer.php'; ?>
 </body>
 </html>

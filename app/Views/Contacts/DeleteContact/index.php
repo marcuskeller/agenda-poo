@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../infra/ConfigDatabase.php';
-require_once __DIR__ . '/../../Models/Users/list.php';
-require_once __DIR__ . '/../../Models/Users/edit.php';
+require_once __DIR__ . '/../../../Infra/ConfigDatabase.php';
+require_once __DIR__ . '/../../../Models/Users/list.php';
+require_once __DIR__ . '/../../../Models/Users/edit.php';
 
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 
@@ -10,12 +10,18 @@ $id = (int) ($_GET['id'] ?? 0);
 $contato = buscarContato($conn, $id);
 
 if ($contato === null) {
-    header('Location: ../GlobalMessages/erro.html');
+    header('Location: ../../GlobalMessages/erro.php');
     exit;
 }
 
 $contatos = listarContatos($conn);
 $total = count($contatos);
+
+$brandHref = '../listContats/index.php';
+$headerCaption = 'Organização pessoal / 01';
+$headerLinkHref = '../CreateContact/index.php';
+$headerLinkText = 'Novo contato';
+$showPlus = true;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -23,20 +29,10 @@ $total = count($contatos);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excluir contato | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" href="../HomePage/index.php" aria-label="Agenda, ir para contatos">
-            <span class="brand-mark" aria-hidden="true">A</span>
-            <span class="brand-copy">
-                <span class="brand-name">agenda</span>
-                <span class="brand-caption">Caderno de contatos</span>
-            </span>
-        </a>
-        <span class="header-caption">Organização pessoal / 01</span>
-        <a class="header-link" href="../CreateContact/index.html"><span class="header-link-mark" aria-hidden="true">+</span> Novo contato</a>
-    </header>
+<?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
 
     <main class="page-shell">
         <section class="page-intro" aria-labelledby="page-title">
@@ -92,21 +88,18 @@ $total = count($contatos);
         </section>
     </main>
 
-    <footer class="site-footer">
-        <span>agenda / Caderno de contatos</span>
-        <span>Organização pessoal</span>
-    </footer>
+<?php require_once __DIR__ . '/../../Components/footer.php'; ?>
 
     <div class="modal-overlay">
-        <a class="modal-scrim" href="../HomePage/index.php" aria-label="Cancelar exclusão"></a>
+        <a class="modal-scrim" href="../listContats/index.php" aria-label="Cancelar exclusão"></a>
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
             <p class="modal-marker">! Confirmar exclusão</p>
             <h2 class="modal-title" id="modal-title">Excluir contato?</h2>
             <p class="modal-copy" id="modal-desc">Deseja excluir <?= $e($contato['nome']) ?> da sua agenda?</p>
             <p class="modal-copy modal-copy--note">Esta ação não pode ser desfeita.</p>
             <div class="modal-actions">
-                <a class="button-secondary" href="../HomePage/index.php">Cancelar</a>
-                <a class="button-danger-outline" href="../../Controller/Users/UsersController.php?action=delete&amp;id=<?= (int) $contato['id'] ?>">Confirmar exclusão</a>
+                <a class="button-secondary" href="../listContats/index.php">Cancelar</a>
+                <a class="button-danger-outline" href="../../../Controller/Users/UsersController.php?action=delete&amp;id=<?= (int) $contato['id'] ?>">Confirmar exclusão</a>
             </div>
         </div>
     </div>
