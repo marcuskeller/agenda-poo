@@ -1,21 +1,13 @@
 <?php
 
-require_once __DIR__ . '/../../../Infra/ConfigDatabase.php';
-require_once __DIR__ . '/../../../Models/Users/edit.php';
-
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 
-$id = (int) ($_GET['id'] ?? 0);
-$contato = buscarContato($conn, $id);
+$listaUrl = 'ListContactsController.php';
+$editarUrl = 'EditContactController.php';
 
-if ($contato === null) {
-    header('Location: ../../GlobalMessages/erro.php');
-    exit;
-}
-
-$brandHref = '../listContats/index.php';
+$brandHref = $listaUrl;
 $headerCaption = 'Organização pessoal / 03';
-$headerLinkHref = '../listContats/index.php';
+$headerLinkHref = $listaUrl;
 $headerLinkText = 'Todos os contatos';
 $showPlus = false;
 ?>
@@ -25,7 +17,7 @@ $showPlus = false;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar contato | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../Views/style.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
@@ -42,24 +34,23 @@ $showPlus = false;
             <p class="form-section-label">Informações pessoais</p>
             <p class="form-note">* Campos obrigatórios</p>
 
-            <form action="../../../Controller/Users/UsersController.php" method="post">
-                <input type="hidden" name="action" value="update">
-                <input type="hidden" name="id" value="<?= (int) $contato['id'] ?>">
+            <form action="<?= $e($editarUrl) ?>" method="post">
+                <input type="hidden" name="id" value="<?= (int) $contato->id() ?>">
 
                 <div class="form-grid">
                     <div class="field field--wide">
                         <label class="field-label" for="nome">Nome <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="nome" name="nome" type="text" maxlength="100" autocomplete="name" required value="<?= $e($contato['nome']) ?>">
+                        <input class="field-input" id="nome" name="nome" type="text" maxlength="100" autocomplete="name" required value="<?= $e($contato->nome()) ?>">
                         <p class="field-hint">Máximo de 100 caracteres</p>
                     </div>
                     <div class="field">
                         <label class="field-label" for="telefone">Telefone <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="telefone" name="telefone" type="tel" maxlength="20" autocomplete="tel" required value="<?= $e($contato['telefone']) ?>">
+                        <input class="field-input" id="telefone" name="telefone" type="tel" maxlength="20" autocomplete="tel" required value="<?= $e($contato->telefone()) ?>">
                         <p class="field-hint">Máximo de 20 caracteres</p>
                     </div>
                     <div class="field">
                         <label class="field-label" for="email">E-mail (opcional)</label>
-                        <input class="field-input" id="email" name="email" type="email" maxlength="100" autocomplete="email" value="<?= $e($contato['email']) ?>">
+                        <input class="field-input" id="email" name="email" type="email" maxlength="100" autocomplete="email" value="<?= $e($contato->email()) ?>">
                         <p class="field-hint">Opcional · máximo de 100 caracteres</p>
                     </div>
                 </div>
@@ -69,7 +60,7 @@ $showPlus = false;
                 <div class="form-actions">
                     <p class="form-note"><span class="required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
                     <div class="form-action-group">
-                        <a class="button-link" href="../listContats/index.php">Cancelar</a>
+                        <a class="button-link" href="<?= $e($listaUrl) ?>">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar alterações</button>
                     </div>
                 </div>

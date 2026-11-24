@@ -1,26 +1,17 @@
 <?php
 
-require_once __DIR__ . '/../../../Infra/ConfigDatabase.php';
-require_once __DIR__ . '/../../../Models/Users/list.php';
-
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
-
-$contatos = listarContatos($conn);
-
-$mensagens = [
-    'criado' => 'Contato criado com sucesso.',
-    'atualizado' => 'Contato atualizado com sucesso.',
-    'excluido' => 'Contato excluído com sucesso.',
-];
-
-$msg = $_GET['msg'] ?? '';
-$aviso = $mensagens[$msg] ?? null;
 
 $total = count($contatos);
 
-$brandHref = 'index.php';
+$listaUrl = 'ListContactsController.php';
+$criarUrl = 'CreateContactController.php';
+$editarUrl = 'EditContactController.php';
+$excluirUrl = 'DeleteContactController.php';
+
+$brandHref = $listaUrl;
 $headerCaption = 'Organização pessoal / 01';
-$headerLinkHref = '../CreateContact/index.php';
+$headerLinkHref = $criarUrl;
 $headerLinkText = 'Novo contato';
 $showPlus = true;
 ?>
@@ -30,7 +21,7 @@ $showPlus = true;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contatos | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../Views/style.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
@@ -61,7 +52,7 @@ $showPlus = true;
                     <span class="empty-mark" aria-hidden="true">+</span>
                     <h3 class="empty-title">Nenhum contato ainda</h3>
                     <p class="empty-copy">Sua agenda está vazia. Cadastre o primeiro contato para começar.</p>
-                    <a class="button-primary" href="../CreateContact/index.php">Adicionar contato</a>
+                    <a class="button-primary" href="<?= $e($criarUrl) ?>">Adicionar contato</a>
                 </div>
             <?php else: ?>
                 <div class="table-scroll">
@@ -79,21 +70,21 @@ $showPlus = true;
                         <tbody>
                             <?php foreach ($contatos as $contato): ?>
                                 <?php
-                                $id = (int) $contato['id'];
-                                $data = $contato['data_cadastro']
-                                    ? date('d/m/Y \à\s H:i', strtotime($contato['data_cadastro']))
+                                $id = (int) $contato->id();
+                                $data = $contato->dataCadastro()
+                                    ? date('d/m/Y \à\s H:i', strtotime($contato->dataCadastro()))
                                     : '—';
                                 ?>
                                 <tr>
                                     <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $id) ?></td>
-                                    <td class="contact-name" data-label="Nome"><?= $e($contato['nome']) ?></td>
-                                    <td data-label="Telefone"><?= $e($contato['telefone']) ?></td>
-                                    <td class="contact-email" data-label="E-mail"><?= $contato['email'] !== null && $contato['email'] !== '' ? $e($contato['email']) : '—' ?></td>
+                                    <td class="contact-name" data-label="Nome"><?= $e($contato->nome()) ?></td>
+                                    <td data-label="Telefone"><?= $e($contato->telefone()) ?></td>
+                                    <td class="contact-email" data-label="E-mail"><?= $contato->email() !== null ? $e($contato->email()) : '—' ?></td>
                                     <td class="contact-date" data-label="Cadastro"><?= $e($data) ?></td>
                                     <td data-label="Ações">
                                         <div class="row-actions">
-                                            <a class="row-action" href="../EditContact/index.php?id=<?= $id ?>">Editar</a>
-                                            <a class="row-action row-action--delete" href="../DeleteContact/index.php?id=<?= $id ?>">Excluir</a>
+                                            <a class="row-action" href="<?= $e($editarUrl) ?>?id=<?= $id ?>">Editar</a>
+                                            <a class="row-action row-action--delete" href="<?= $e($excluirUrl) ?>?id=<?= $id ?>">Excluir</a>
                                         </div>
                                     </td>
                                 </tr>

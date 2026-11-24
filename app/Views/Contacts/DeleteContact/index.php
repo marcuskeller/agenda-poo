@@ -1,25 +1,17 @@
 <?php
 
-require_once __DIR__ . '/../../../Infra/ConfigDatabase.php';
-require_once __DIR__ . '/../../../Models/Users/list.php';
-require_once __DIR__ . '/../../../Models/Users/edit.php';
-
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 
-$id = (int) ($_GET['id'] ?? 0);
-$contato = buscarContato($conn, $id);
-
-if ($contato === null) {
-    header('Location: ../../GlobalMessages/erro.php');
-    exit;
-}
-
-$contatos = listarContatos($conn);
 $total = count($contatos);
 
-$brandHref = '../listContats/index.php';
+$listaUrl = 'ListContactsController.php';
+$criarUrl = 'CreateContactController.php';
+$editarUrl = 'EditContactController.php';
+$excluirUrl = 'DeleteContactController.php';
+
+$brandHref = $listaUrl;
 $headerCaption = 'Organização pessoal / 01';
-$headerLinkHref = '../CreateContact/index.php';
+$headerLinkHref = $criarUrl;
 $headerLinkText = 'Novo contato';
 $showPlus = true;
 ?>
@@ -29,7 +21,7 @@ $showPlus = true;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excluir contato | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../Views/style.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
@@ -63,21 +55,21 @@ $showPlus = true;
                     <tbody>
                         <?php foreach ($contatos as $linha): ?>
                             <?php
-                            $linhaId = (int) $linha['id'];
-                            $data = $linha['data_cadastro']
-                                ? date('d/m/Y \à\s H:i', strtotime($linha['data_cadastro']))
+                            $linhaId = (int) $linha->id();
+                            $data = $linha->dataCadastro()
+                                ? date('d/m/Y \à\s H:i', strtotime($linha->dataCadastro()))
                                 : '—';
                             ?>
                             <tr>
                                 <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $linhaId) ?></td>
-                                <td class="contact-name" data-label="Nome"><?= $e($linha['nome']) ?></td>
-                                <td data-label="Telefone"><?= $e($linha['telefone']) ?></td>
-                                <td class="contact-email" data-label="E-mail"><?= $linha['email'] !== null && $linha['email'] !== '' ? $e($linha['email']) : '—' ?></td>
+                                <td class="contact-name" data-label="Nome"><?= $e($linha->nome()) ?></td>
+                                <td data-label="Telefone"><?= $e($linha->telefone()) ?></td>
+                                <td class="contact-email" data-label="E-mail"><?= $linha->email() !== null ? $e($linha->email()) : '—' ?></td>
                                 <td class="contact-date" data-label="Cadastro"><?= $e($data) ?></td>
                                 <td data-label="Ações">
                                     <div class="row-actions">
-                                        <a class="row-action" href="../EditContact/index.php?id=<?= $linhaId ?>">Editar</a>
-                                        <a class="row-action row-action--delete" href="index.php?id=<?= $linhaId ?>">Excluir</a>
+                                        <a class="row-action" href="<?= $e($editarUrl) ?>?id=<?= $linhaId ?>">Editar</a>
+                                        <a class="row-action row-action--delete" href="<?= $e($excluirUrl) ?>?id=<?= $linhaId ?>">Excluir</a>
                                     </div>
                                 </td>
                             </tr>
@@ -91,15 +83,18 @@ $showPlus = true;
 <?php require_once __DIR__ . '/../../Components/footer.php'; ?>
 
     <div class="modal-overlay">
-        <a class="modal-scrim" href="../listContats/index.php" aria-label="Cancelar exclusão"></a>
+        <a class="modal-scrim" href="<?= $e($listaUrl) ?>" aria-label="Cancelar exclusão"></a>
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
             <p class="modal-marker">! Confirmar exclusão</p>
             <h2 class="modal-title" id="modal-title">Excluir contato?</h2>
-            <p class="modal-copy" id="modal-desc">Deseja excluir <?= $e($contato['nome']) ?> da sua agenda?</p>
+            <p class="modal-copy" id="modal-desc">Deseja excluir <?= $e($contato->nome()) ?> da sua agenda?</p>
             <p class="modal-copy modal-copy--note">Esta ação não pode ser desfeita.</p>
             <div class="modal-actions">
-                <a class="button-secondary" href="../listContats/index.php">Cancelar</a>
-                <a class="button-danger-outline" href="../../../Controller/Users/UsersController.php?action=delete&amp;id=<?= (int) $contato['id'] ?>">Confirmar exclusão</a>
+                <a class="button-secondary" href="<?= $e($listaUrl) ?>">Cancelar</a>
+                <form action="<?= $e($excluirUrl) ?>" method="post">
+                    <input type="hidden" name="id" value="<?= (int) $contato->id() ?>">
+                    <button class="button-danger-outline" type="submit">Confirmar exclusão</button>
+                </form>
             </div>
         </div>
     </div>
