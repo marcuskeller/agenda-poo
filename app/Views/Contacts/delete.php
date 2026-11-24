@@ -1,17 +1,17 @@
 <?php
 
-$e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+$e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
-$total = count($contatos);
+$total = count($contacts);
 
-$listaUrl = 'ContactController.php?action=list';
-$criarUrl = 'ContactController.php?action=create';
-$editarUrl = 'ContactController.php?action=edit';
-$excluirUrl = 'ContactController.php?action=delete';
+$listUrl = 'ContactController.php?action=list';
+$createUrl = 'ContactController.php?action=create';
+$editUrl = 'ContactController.php?action=edit';
+$deleteUrl = 'ContactController.php?action=delete';
 
-$brandHref = $listaUrl;
+$brandHref = $listUrl;
 $headerCaption = 'Organização pessoal / 01';
-$headerLinkHref = $criarUrl;
+$headerLinkHref = $createUrl;
 $headerLinkText = 'Novo contato';
 $showPlus = true;
 ?>
@@ -53,23 +53,23 @@ $showPlus = true;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($contatos as $linha): ?>
+                        <?php foreach ($contacts as $item): ?>
                             <?php
-                            $linhaId = (int) $linha->getId();
-                            $data = $linha->getCreatedAt()
-                                ? date('d/m/Y \à\s H:i', strtotime($linha->getCreatedAt()))
+                            $itemId = (int) $item->getId();
+                            $date = $item->getCreatedAt()
+                                ? date('d/m/Y \à\s H:i', strtotime($item->getCreatedAt()))
                                 : '—';
                             ?>
                             <tr>
-                                <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $linhaId) ?></td>
-                                <td class="contact-name" data-label="Nome"><?= $e($linha->getName()) ?></td>
-                                <td data-label="Telefone"><?= $e($linha->getPhone()) ?></td>
-                                <td class="contact-email" data-label="E-mail"><?= $linha->getEmail() !== null ? $e($linha->getEmail()) : '—' ?></td>
-                                <td class="contact-date" data-label="Cadastro"><?= $e($data) ?></td>
+                                <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $itemId) ?></td>
+                                <td class="contact-name" data-label="Nome"><?= $e($item->getName()) ?></td>
+                                <td data-label="Telefone"><?= $e($item->getPhone()) ?></td>
+                                <td class="contact-email" data-label="E-mail"><?= $item->getEmail() !== null ? $e($item->getEmail()) : '—' ?></td>
+                                <td class="contact-date" data-label="Cadastro"><?= $e($date) ?></td>
                                 <td data-label="Ações">
                                     <div class="row-actions">
-                                        <a class="row-action" href="<?= $e($editarUrl) ?>?id=<?= $linhaId ?>">Editar</a>
-                                        <a class="row-action row-action--delete" href="<?= $e($excluirUrl) ?>?id=<?= $linhaId ?>">Excluir</a>
+                                        <a class="row-action" href="<?= $e($editUrl) ?>?id=<?= $itemId ?>">Editar</a>
+                                        <a class="row-action row-action--delete" href="<?= $e($deleteUrl) ?>?id=<?= $itemId ?>">Excluir</a>
                                     </div>
                                 </td>
                             </tr>
@@ -81,16 +81,16 @@ $showPlus = true;
     </main>
 
     <div class="modal-overlay">
-        <a class="modal-scrim" href="<?= $e($listaUrl) ?>" aria-label="Cancelar exclusão"></a>
+        <a class="modal-scrim" href="<?= $e($listUrl) ?>" aria-label="Cancelar exclusão"></a>
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
             <p class="modal-marker">! Confirmar exclusão</p>
             <h2 class="modal-title" id="modal-title">Excluir contato?</h2>
-            <p class="modal-copy" id="modal-desc">Deseja excluir <?= $e($contato->getName()) ?> da sua agenda?</p>
+            <p class="modal-copy" id="modal-desc">Deseja excluir <?= $e($contact->getName()) ?> da sua agenda?</p>
             <p class="modal-copy modal-copy--note">Esta ação não pode ser desfeita.</p>
             <div class="modal-actions">
-                <a class="button-secondary" href="<?= $e($listaUrl) ?>">Cancelar</a>
-                <form action="<?= $e($excluirUrl) ?>" method="post">
-                    <input type="hidden" name="id" value="<?= (int) $contato->getId() ?>">
+                <a class="button-secondary" href="<?= $e($listUrl) ?>">Cancelar</a>
+                <form action="<?= $e($deleteUrl) ?>" method="post">
+                    <input type="hidden" name="id" value="<?= (int) $contact->getId() ?>">
                     <button class="button-danger-outline" type="submit">Confirmar exclusão</button>
                 </form>
             </div>

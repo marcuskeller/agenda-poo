@@ -760,6 +760,19 @@ h1 {
     background: #e9f4d8;
 }
 
+.notice--error {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-left-color: #c0392b;
+    color: #7a1f14;
+    background: #fdeceb;
+}
+
+.notice--error .notice-mark {
+    color: #c0392b;
+}
+
 .notice-mark {
     color: #4d7427;
     font-weight: 700;

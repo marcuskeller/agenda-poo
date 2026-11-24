@@ -1,34 +1,41 @@
 <?php
 
-$acessoDireto = realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__;
+$directAccess = realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__;
 
-if ($acessoDireto) {
+if ($directAccess) {
     require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
     require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
-    $contatos = (new ContactService())->listAll($conn);
+    $contacts = (new ContactService())->listAll($conn);
 }
 
-$e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+$e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
-$total = count($contatos);
+$total = count($contacts);
 
-$mensagens = [
+$messages = [
     'created' => 'Contato criado com sucesso.',
     'updated' => 'Contato atualizado com sucesso.',
     'deleted' => 'Contato excluído com sucesso.',
     'error' => 'Não foi possível concluir a operação. Verifique os dados e tente novamente.',
+    'error_name' => 'Informe o nome do contato.',
+    'error_phone' => 'Telefone inválido. Informe DDD e número (10 a 13 dígitos).',
+    'error_email' => 'E-mail inválido. Verifique o endereço informado.',
+    'error_duplicate_phone' => 'Já existe um contato cadastrado com este telefone.',
+    'error_duplicate_email' => 'Já existe um contato cadastrado com este e-mail.',
 ];
-$aviso = $mensagens[$_GET['msg'] ?? ''] ?? null;
+$messageKey = $_GET['msg'] ?? '';
+$notice = $messages[$messageKey] ?? null;
+$noticeIsError = str_starts_with((string) $messageKey, 'error');
 
-$controladorUrl = $acessoDireto ? '../../Controller/Contacts/ContactController.php' : 'ContactController.php';
-$listaUrl = $controladorUrl . '?action=list';
-$criarUrl = $controladorUrl . '?action=create';
-$editarUrl = $controladorUrl . '?action=edit';
-$excluirUrl = $controladorUrl . '?action=delete';
+$controllerUrl = $directAccess ? '../../Controller/Contacts/ContactController.php' : 'ContactController.php';
+$listUrl = $controllerUrl . '?action=list';
+$createUrl = $controllerUrl . '?action=create';
+$editUrl = $controllerUrl . '?action=edit';
+$deleteUrl = $controllerUrl . '?action=delete';
 
-$brandHref = $listaUrl;
+$brandHref = $listUrl;
 $headerCaption = 'Organização pessoal / 01';
-$headerLinkHref = $criarUrl;
+$headerLinkHref = $createUrl;
 $headerLinkText = 'Novo contato';
 $showPlus = true;
 ?>
@@ -38,7 +45,7 @@ $showPlus = true;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contatos | Agenda Telefônica</title>
-    <link rel="stylesheet" href="<?= $acessoDireto ? '../style.css' : '../../Views/style.css' ?>">
+    <link rel="stylesheet" href="<?= $directAccess ? '../style.css' : '../../Views/style.css' ?>">
 </head>
 <body>
 <?php require_once __DIR__ . '/../Components/navbar.php'; ?>
@@ -51,10 +58,10 @@ $showPlus = true;
             </div>
         </section>
 
-        <?php if ($aviso !== null): ?>
-            <p class="notice notice--success" role="status">
-                <span class="notice-mark" aria-hidden="true">&#10003;</span>
-                <?= $e($aviso) ?>
+        <?php if ($notice !== null): ?>
+            <p class="notice <?= $noticeIsError ? 'notice--error' : 'notice--success' ?>" role="<?= $noticeIsError ? 'alert' : 'status' ?>">
+                <span class="notice-mark" aria-hidden="true"><?= $noticeIsError ? '!' : '&#10003;' ?></span>
+                <?= $e($notice) ?>
             </p>
         <?php endif; ?>
 
@@ -69,7 +76,7 @@ $showPlus = true;
                     <span class="empty-mark" aria-hidden="true">+</span>
                     <h3 class="empty-title">Nenhum contato ainda</h3>
                     <p class="empty-copy">Sua agenda está vazia. Cadastre o primeiro contato para começar.</p>
-                    <a class="button-primary" href="<?= $e($criarUrl) ?>">Adicionar contato</a>
+                    <a class="button-primary" href="<?= $e($createUrl) ?>">Adicionar contato</a>
                 </div>
             <?php else: ?>
                 <div class="table-scroll">
@@ -85,23 +92,23 @@ $showPlus = true;
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($contatos as $contato): ?>
+                            <?php foreach ($contacts as $contact): ?>
                                 <?php
-                                $id = (int) $contato->getId();
-                                $data = $contato->getCreatedAt()
-                                    ? date('d/m/Y \à\s H:i', strtotime($contato->getCreatedAt()))
+                                $id = (int) $contact->getId();
+                                $date = $contact->getCreatedAt()
+                                    ? date('d/m/Y \à\s H:i', strtotime($contact->getCreatedAt()))
                                     : '—';
                                 ?>
                                 <tr>
                                     <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $id) ?></td>
-                                    <td class="contact-name" data-label="Nome"><?= $e($contato->getName()) ?></td>
-                                    <td data-label="Telefone"><?= $e($contato->getPhone()) ?></td>
-                                    <td class="contact-email" data-label="E-mail"><?= $contato->getEmail() !== null ? $e($contato->getEmail()) : '—' ?></td>
-                                    <td class="contact-date" data-label="Cadastro"><?= $e($data) ?></td>
+                                    <td class="contact-name" data-label="Nome"><?= $e($contact->getName()) ?></td>
+                                    <td data-label="Telefone"><?= $e($contact->getPhone()) ?></td>
+                                    <td class="contact-email" data-label="E-mail"><?= $contact->getEmail() !== null ? $e($contact->getEmail()) : '—' ?></td>
+                                    <td class="contact-date" data-label="Cadastro"><?= $e($date) ?></td>
                                     <td data-label="Ações">
                                         <div class="row-actions">
-                                        <a class="row-action" href="<?= $e($editarUrl) ?>&amp;id=<?= $id ?>">Editar</a>
-                                        <a class="row-action row-action--delete" href="<?= $e($excluirUrl) ?>&amp;id=<?= $id ?>">Excluir</a>
+                                        <a class="row-action" href="<?= $e($editUrl) ?>&amp;id=<?= $id ?>">Editar</a>
+                                        <a class="row-action row-action--delete" href="<?= $e($deleteUrl) ?>&amp;id=<?= $id ?>">Excluir</a>
                                         </div>
                                     </td>
                                 </tr>

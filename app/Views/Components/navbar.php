@@ -1,6 +1,6 @@
 <?php
 
-$esc = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+$esc = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
 $brandHref = $brandHref ?? 'ContactController.php?action=list';
 $headerCaption = $headerCaption ?? 'Organização pessoal / 01';

@@ -1,13 +1,13 @@
 <?php
 
-$e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
+$e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
-$listaUrl = 'ContactController.php?action=list';
-$editarUrl = 'ContactController.php?action=edit';
+$listUrl = 'ContactController.php?action=list';
+$editUrl = 'ContactController.php?action=edit';
 
-$brandHref = $listaUrl;
+$brandHref = $listUrl;
 $headerCaption = 'Organização pessoal / 03';
-$headerLinkHref = $listaUrl;
+$headerLinkHref = $listUrl;
 $headerLinkText = 'Todos os contatos';
 $showPlus = false;
 ?>
@@ -34,23 +34,30 @@ $showPlus = false;
             <p class="form-section-label">Informações pessoais</p>
             <p class="form-note">* Campos obrigatórios</p>
 
-            <form action="<?= $e($editarUrl) ?>" method="post">
-                <input type="hidden" name="id" value="<?= (int) $contato->getId() ?>">
+            <?php if (!empty($error)): ?>
+                <p class="notice notice--error" role="alert">
+                    <span class="notice-mark" aria-hidden="true">!</span>
+                    <?= $e($error) ?>
+                </p>
+            <?php endif; ?>
+
+            <form action="<?= $e($editUrl) ?>" method="post">
+                <input type="hidden" name="id" value="<?= (int) $contact->getId() ?>">
 
                 <div class="form-grid">
                     <div class="field field--wide">
-                        <label class="field-label" for="nome">Nome <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="nome" name="nome" type="text" maxlength="100" autocomplete="name" required value="<?= $e($contato->getName()) ?>">
+                        <label class="field-label" for="name">Nome <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input class="field-input" id="name" name="name" type="text" maxlength="100" autocomplete="name" required value="<?= $e($contact->getName()) ?>">
                         <p class="field-hint">Máximo de 100 caracteres</p>
                     </div>
                     <div class="field">
-                        <label class="field-label" for="telefone">Telefone <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="telefone" name="telefone" type="tel" maxlength="20" autocomplete="tel" required value="<?= $e($contato->getPhone()) ?>">
+                        <label class="field-label" for="phone">Telefone <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input class="field-input" id="phone" name="phone" type="tel" maxlength="20" autocomplete="tel" required value="<?= $e($contact->getPhone()) ?>">
                         <p class="field-hint">Máximo de 20 caracteres</p>
                     </div>
                     <div class="field">
                         <label class="field-label" for="email">E-mail (opcional)</label>
-                        <input class="field-input" id="email" name="email" type="email" maxlength="100" autocomplete="email" value="<?= $e($contato->getEmail()) ?>">
+                        <input class="field-input" id="email" name="email" type="email" maxlength="100" autocomplete="email" value="<?= $e($contact->getEmail()) ?>">
                         <p class="field-hint">Opcional · máximo de 100 caracteres</p>
                     </div>
                 </div>
@@ -60,7 +67,7 @@ $showPlus = false;
                 <div class="form-actions">
                     <p class="form-note"><span class="required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
                     <div class="form-action-group">
-                        <a class="button-link" href="<?= $e($listaUrl) ?>">Cancelar</a>
+                        <a class="button-link" href="<?= $e($listUrl) ?>">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar alterações</button>
                     </div>
                 </div>

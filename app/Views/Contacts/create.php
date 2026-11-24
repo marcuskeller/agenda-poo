@@ -1,3 +1,7 @@
+<?php
+
+$e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -21,21 +25,28 @@
             <p class="form-section-label">Informações pessoais</p>
             <p class="form-note">* Campos obrigatórios</p>
 
+            <?php if (!empty($error)): ?>
+                <p class="notice notice--error" role="alert">
+                    <span class="notice-mark" aria-hidden="true">!</span>
+                    <?= $e($error) ?>
+                </p>
+            <?php endif; ?>
+
             <form action="ContactController.php?action=create" method="post">
                 <div class="form-grid">
                     <div class="field field--wide">
-                        <label class="field-label" for="nome">Nome <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="nome" name="nome" type="text" maxlength="100" autocomplete="name" required placeholder="Nome completo">
+                        <label class="field-label" for="name">Nome <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input class="field-input" id="name" name="name" type="text" maxlength="100" autocomplete="name" required value="<?= $e($contact->getName()) ?>" placeholder="Nome completo">
                         <p class="field-hint">Máximo de 100 caracteres</p>
                     </div>
                     <div class="field">
-                        <label class="field-label" for="telefone">Telefone <span class="required-mark" aria-hidden="true">*</span></label>
-                        <input class="field-input" id="telefone" name="telefone" type="tel" maxlength="20" autocomplete="tel" required placeholder="(00) 00000-0000">
+                        <label class="field-label" for="phone">Telefone <span class="required-mark" aria-hidden="true">*</span></label>
+                        <input class="field-input" id="phone" name="phone" type="tel" maxlength="20" autocomplete="tel" required value="<?= $e($contact->getPhone()) ?>" placeholder="(00) 00000-0000">
                         <p class="field-hint">Máximo de 20 caracteres</p>
                     </div>
                     <div class="field">
                         <label class="field-label" for="email">E-mail (opcional)</label>
-                        <input class="field-input" id="email" name="email" type="email" maxlength="100" autocomplete="email" placeholder="nome@exemplo.com">
+                        <input class="field-input" id="email" name="email" type="email" maxlength="100" autocomplete="email" value="<?= $e($contact->getEmail()) ?>" placeholder="nome@exemplo.com">
                         <p class="field-hint">Opcional · máximo de 100 caracteres</p>
                     </div>
                 </div>

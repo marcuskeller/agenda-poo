@@ -1,5 +1,5 @@
 <?php
-$host     = 'localhost';
+$host     = '127.0.0.1';
 $port     = 3309;
 $username = 'root';
 $password = 'root';
@@ -12,3 +12,6 @@ if (!$conn) {
 }
 
 mysqli_set_charset($conn, "utf8");
+
+date_default_timezone_set('America/Sao_Paulo');
+mysqli_query($conn, "SET time_zone = '-03:00'");

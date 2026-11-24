@@ -11,4 +11,6 @@ interface ContactRepositoryInterface
     public function update(mysqli $conn, int $id, array $contact): bool;
 
     public function delete(mysqli $conn, int $id): bool;
+
+    public function findDuplicateField(mysqli $conn, string $phone, ?string $email, int $excludeId = 0): ?string;
 }

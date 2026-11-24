@@ -32,14 +32,7 @@ final class ContactController
 
     private function index(): void
     {
-        $contatos = $this->contactService->listAll($this->conn);
-        $mensagens = [
-            'created' => 'Contato criado com sucesso.',
-            'updated' => 'Contato atualizado com sucesso.',
-            'deleted' => 'Contato excluído com sucesso.',
-            'error' => 'Não foi possível concluir a operação. Verifique os dados e tente novamente.',
-        ];
-        $aviso = $mensagens[$_GET['msg'] ?? ''] ?? null;
+        $contacts = $this->contactService->listAll($this->conn);
 
         $conn = $this->conn;
         require __DIR__ . '/../../Views/Contacts/list.php';
@@ -47,14 +40,19 @@ final class ContactController
 
     private function create(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $created = $this->contactService->create($this->conn, [
-                'name' => $_POST['nome'] ?? '',
-                'phone' => $_POST['telefone'] ?? '',
-                'email' => $_POST['email'] ?? '',
-            ]);
+        $contact = new ContactEntity();
+        $error = null;
 
-            $this->redirect($created ? 'created' : 'error');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $this->formData();
+            $created = $this->contactService->create($this->conn, $data);
+
+            if ($created) {
+                $this->redirect('created');
+            }
+
+            $contact->fill($data);
+            $error = $this->errorMessage();
         }
 
         require __DIR__ . '/../../Views/Contacts/create.php';
@@ -63,24 +61,48 @@ final class ContactController
     private function edit(): void
     {
         $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
+        $error = null;
+        $contact = $this->contactService->findById($this->conn, $id);
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $updated = $this->contactService->update($this->conn, $id, [
-                'name' => $_POST['nome'] ?? '',
-                'phone' => $_POST['telefone'] ?? '',
-                'email' => $_POST['email'] ?? '',
-            ]);
-
-            $this->redirect($updated ? 'updated' : 'error');
-        }
-
-        $contato = $this->contactService->findById($this->conn, $id);
-
-        if ($contato === null) {
+        if ($contact === null) {
             $this->redirect('error');
         }
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $this->formData();
+            $updated = $this->contactService->update($this->conn, $id, $data);
+
+            if ($updated) {
+                $this->redirect('updated');
+            }
+
+            $contact->fill(['id' => $id] + $data, $contact->getUserId());
+            $error = $this->errorMessage();
+        }
+
         require __DIR__ . '/../../Views/Contacts/edit.php';
+    }
+
+    private function formData(): array
+    {
+        return [
+            'name' => $_POST['name'] ?? '',
+            'phone' => $_POST['phone'] ?? '',
+            'email' => $_POST['email'] ?? '',
+        ];
+    }
+
+    private function errorMessage(): string
+    {
+        $messages = [
+            'error_name' => 'Informe o nome do contato.',
+            'error_phone' => 'Telefone inválido. Informe DDD e número (10 a 13 dígitos).',
+            'error_email' => 'E-mail inválido. Verifique o endereço informado.',
+            'error_duplicate_phone' => 'Já existe um contato cadastrado com este telefone.',
+            'error_duplicate_email' => 'Já existe um contato cadastrado com este e-mail.',
+        ];
+
+        return $messages[$this->contactService->getError() ?? ''] ?? 'Não foi possível salvar o contato. Tente novamente.';
     }
 
     private function delete(): void
@@ -92,13 +114,13 @@ final class ContactController
             $this->redirect($deleted ? 'deleted' : 'error');
         }
 
-        $contato = $this->contactService->findById($this->conn, $id);
+        $contact = $this->contactService->findById($this->conn, $id);
 
-        if ($contato === null) {
+        if ($contact === null) {
             $this->redirect('error');
         }
 
-        $contatos = $this->contactService->listAll($this->conn);
+        $contacts = $this->contactService->listAll($this->conn);
         $conn = $this->conn;
         require __DIR__ . '/../../Views/Contacts/delete.php';
     }
