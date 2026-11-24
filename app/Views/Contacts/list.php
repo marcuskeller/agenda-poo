@@ -1,13 +1,30 @@
 <?php
 
+$acessoDireto = realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__;
+
+if ($acessoDireto) {
+    require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
+    require_once __DIR__ . '/../../Models/Contacts/ContactRepository.php';
+    $contatos = (new ContactRepository())->listAll($conn);
+}
+
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 
 $total = count($contatos);
 
-$listaUrl = 'ListContactsController.php';
-$criarUrl = 'CreateContactController.php';
-$editarUrl = 'EditContactController.php';
-$excluirUrl = 'DeleteContactController.php';
+$mensagens = [
+    'created' => 'Contato criado com sucesso.',
+    'updated' => 'Contato atualizado com sucesso.',
+    'deleted' => 'Contato excluído com sucesso.',
+    'error' => 'Não foi possível concluir a operação. Verifique os dados e tente novamente.',
+];
+$aviso = $mensagens[$_GET['msg'] ?? ''] ?? null;
+
+$controladorUrl = $acessoDireto ? '../../Controller/Contacts/ContactController.php' : 'ContactController.php';
+$listaUrl = $controladorUrl . '?action=list';
+$criarUrl = $controladorUrl . '?action=create';
+$editarUrl = $controladorUrl . '?action=edit';
+$excluirUrl = $controladorUrl . '?action=delete';
 
 $brandHref = $listaUrl;
 $headerCaption = 'Organização pessoal / 01';
@@ -21,10 +38,10 @@ $showPlus = true;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contatos | Agenda Telefônica</title>
-    <link rel="stylesheet" href="../../Views/style.css">
+    <link rel="stylesheet" href="<?= $acessoDireto ? '../style.css' : '../../Views/style.css' ?>">
 </head>
 <body>
-<?php require_once __DIR__ . '/../../Components/navbar.php'; ?>
+<?php require_once __DIR__ . '/../Components/navbar.php'; ?>
 
     <main class="page-shell">
         <section class="page-intro" aria-labelledby="page-title">
@@ -36,7 +53,7 @@ $showPlus = true;
 
         <?php if ($aviso !== null): ?>
             <p class="notice notice--success" role="status">
-                <span class="notice-mark" aria-hidden="true">✓</span>
+                <span class="notice-mark" aria-hidden="true">&#10003;</span>
                 <?= $e($aviso) ?>
             </p>
         <?php endif; ?>
@@ -70,21 +87,21 @@ $showPlus = true;
                         <tbody>
                             <?php foreach ($contatos as $contato): ?>
                                 <?php
-                                $id = (int) $contato->id();
-                                $data = $contato->dataCadastro()
-                                    ? date('d/m/Y \à\s H:i', strtotime($contato->dataCadastro()))
+                                $id = (int) $contato->getId();
+                                $data = $contato->getCreatedAt()
+                                    ? date('d/m/Y \à\s H:i', strtotime($contato->getCreatedAt()))
                                     : '—';
                                 ?>
                                 <tr>
                                     <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $id) ?></td>
-                                    <td class="contact-name" data-label="Nome"><?= $e($contato->nome()) ?></td>
-                                    <td data-label="Telefone"><?= $e($contato->telefone()) ?></td>
-                                    <td class="contact-email" data-label="E-mail"><?= $contato->email() !== null ? $e($contato->email()) : '—' ?></td>
+                                    <td class="contact-name" data-label="Nome"><?= $e($contato->getName()) ?></td>
+                                    <td data-label="Telefone"><?= $e($contato->getPhone()) ?></td>
+                                    <td class="contact-email" data-label="E-mail"><?= $contato->getEmail() !== null ? $e($contato->getEmail()) : '—' ?></td>
                                     <td class="contact-date" data-label="Cadastro"><?= $e($data) ?></td>
                                     <td data-label="Ações">
                                         <div class="row-actions">
-                                            <a class="row-action" href="<?= $e($editarUrl) ?>?id=<?= $id ?>">Editar</a>
-                                            <a class="row-action row-action--delete" href="<?= $e($excluirUrl) ?>?id=<?= $id ?>">Excluir</a>
+                                        <a class="row-action" href="<?= $e($editarUrl) ?>&amp;id=<?= $id ?>">Editar</a>
+                                        <a class="row-action row-action--delete" href="<?= $e($excluirUrl) ?>&amp;id=<?= $id ?>">Excluir</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -96,6 +113,6 @@ $showPlus = true;
         </section>
     </main>
 
-<?php require_once __DIR__ . '/../../Components/footer.php'; ?>
+<?php require_once __DIR__ . '/../Components/footer.php'; ?>
 </body>
 </html>

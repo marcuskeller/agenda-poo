@@ -1,8 +1,8 @@
 <?php
 
-$brandHref = '../Contacts/listContats/index.php';
+$brandHref = '../../Controller/Contacts/ContactController.php?action=list';
 $headerCaption = 'Organização pessoal / 04';
-$headerLinkHref = '../Contacts/listContats/index.php';
+$headerLinkHref = '../../Controller/Contacts/ContactController.php?action=list';
 $headerLinkText = 'Todos os contatos';
 $showPlus = false;
 ?>
@@ -22,7 +22,7 @@ $showPlus = false;
             <p class="modal-marker">! Atenção</p>
             <h1 id="page-title">Ocorreu um erro</h1>
             <p class="error-copy">Não foi possível concluir a operação. Verifique os dados informados e tente novamente.</p>
-            <a class="button-primary" href="../Contacts/listContats/index.php">Voltar para contatos</a>
+            <a class="button-primary" href="../../Controller/Contacts/ContactController.php?action=list">Voltar para contatos</a>
         </section>
     </main>
 

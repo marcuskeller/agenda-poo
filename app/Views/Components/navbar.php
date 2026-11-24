@@ -2,9 +2,9 @@
 
 $esc = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');
 
-$brandHref = $brandHref ?? 'index.php';
+$brandHref = $brandHref ?? 'ContactController.php?action=list';
 $headerCaption = $headerCaption ?? 'Organização pessoal / 01';
-$headerLinkHref = $headerLinkHref ?? $brandHref;
+$headerLinkHref = $headerLinkHref ?? 'ContactController.php?action=create';
 $headerLinkText = $headerLinkText ?? 'Novo contato';
 $showPlus = $showPlus ?? false;
 ?>
