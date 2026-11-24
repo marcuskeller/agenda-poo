@@ -6,7 +6,7 @@ final class ContactRepository implements ContactRepositoryInterface
 {
     public function listAll(mysqli $conn): array
     {
-        $sql = "SELECT id, usuario_id, nome, telefone, email, data_cadastro FROM contatos ORDER BY id";
+        $sql = "SELECT id, user_id, name, phone, email, created_at FROM contacts ORDER BY id";
         $result = $conn->query($sql);
 
         if (!$result) {
@@ -28,7 +28,7 @@ final class ContactRepository implements ContactRepositoryInterface
             return null;
         }
 
-        $sql = "SELECT id, usuario_id, nome, telefone, email, data_cadastro FROM contatos WHERE id = ?";
+        $sql = "SELECT id, user_id, name, phone, email, created_at FROM contacts WHERE id = ?";
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
@@ -46,7 +46,7 @@ final class ContactRepository implements ContactRepositoryInterface
 
     public function insert(mysqli $conn, array $contact): bool
     {
-        $sql = "INSERT INTO contatos (usuario_id, nome, telefone, email) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO contacts (user_id, name, phone, email) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
@@ -71,7 +71,7 @@ final class ContactRepository implements ContactRepositoryInterface
             return false;
         }
 
-        $sql = "UPDATE contatos SET nome = ?, telefone = ?, email = ? WHERE id = ?";
+        $sql = "UPDATE contacts SET name = ?, phone = ?, email = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
@@ -95,7 +95,7 @@ final class ContactRepository implements ContactRepositoryInterface
             return false;
         }
 
-        $sql = "DELETE FROM contatos WHERE id = ?";
+        $sql = "DELETE FROM contacts WHERE id = ?";
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
@@ -109,15 +109,36 @@ final class ContactRepository implements ContactRepositoryInterface
         return $ok;
     }
 
+    public function findDuplicateField(mysqli $conn, string $phone, ?string $email, int $excludeId = 0): ?string
+    {
+        $stmt = $conn->prepare("SELECT phone, email FROM contacts WHERE id <> ? AND (phone = ? OR (? IS NOT NULL AND email = ?)) LIMIT 1");
+
+        if (!$stmt) {
+            return null;
+        }
+
+        $stmt->bind_param('isss', $excludeId, $phone, $email, $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result ? $result->fetch_assoc() : null;
+        $stmt->close();
+
+        if (!$row) {
+            return null;
+        }
+
+        return $row['phone'] === $phone ? 'phone' : 'email';
+    }
+
     private function hydrate(array $row): array
     {
         return [
             'id' => (int) $row['id'],
-            'user_id' => (int) $row['usuario_id'],
-            'name' => $row['nome'],
-            'phone' => $row['telefone'],
+            'user_id' => (int) $row['user_id'],
+            'name' => $row['name'],
+            'phone' => $row['phone'],
             'email' => $row['email'],
-            'created_at' => $row['data_cadastro'],
+            'created_at' => $row['created_at'],
         ];
     }
 }

@@ -23,7 +23,35 @@ final class ContactEntity
 
     public function validate(): bool
     {
-        return $this->validateName() && $this->validateEmail();
+        return $this->validationError() === null;
+    }
+
+    public function validationError(): ?string
+    {
+        if (!$this->validateName()) {
+            return 'error_name';
+        }
+
+        if (!$this->validatePhone()) {
+            return 'error_phone';
+        }
+
+        if (!$this->validateEmail()) {
+            return 'error_email';
+        }
+
+        return null;
+    }
+
+    private function validatePhone(): bool
+    {
+        if (preg_match('/^\+?[\d\s()\-]+$/', $this->phone) !== 1) {
+            return false;
+        }
+
+        $digits = strlen(preg_replace('/\D/', '', $this->phone));
+
+        return $digits >= 10 && $digits <= 13;
     }
 
     public function getId(): ?int
