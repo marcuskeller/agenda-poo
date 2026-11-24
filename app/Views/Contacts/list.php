@@ -4,8 +4,8 @@ $acessoDireto = realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__;
 
 if ($acessoDireto) {
     require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
-    require_once __DIR__ . '/../../Models/Contacts/ContactRepository.php';
-    $contatos = (new ContactRepository())->listAll($conn);
+    require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
+    $contatos = (new ContactService())->listAll($conn);
 }
 
 $e = static fn ($valor): string => htmlspecialchars((string) $valor, ENT_QUOTES, 'UTF-8');

@@ -1,13 +1,13 @@
 <?php
 
-final class Contact
+final class ContactEntity
 {
-    private ?int $id = null;
+    private $id = null;
     private int $userId = 1;
     private string $name = '';
     private string $phone = '';
-    private ?string $email = null;
-    private ?string $createdAt = null;
+    private $email = null;
+    private $createdAt = null;
 
     public function fill(array $data, int $userId = 1): void
     {
@@ -24,16 +24,6 @@ final class Contact
     public function validate(): bool
     {
         return $this->validateName() && $this->validateEmail();
-    }
-
-    private function validateName(): bool
-    {
-        return $this->name !== '';
-    }
-
-    private function validateEmail(): bool
-    {
-        return $this->email === null || filter_var($this->email, FILTER_VALIDATE_EMAIL) !== false;
     }
 
     public function getId(): ?int
@@ -64,5 +54,27 @@ final class Contact
     public function getCreatedAt(): ?string
     {
         return $this->createdAt;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'user_id' => $this->userId,
+            'name' => $this->name,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'created_at' => $this->createdAt,
+        ];
+    }
+
+    private function validateName(): bool
+    {
+        return $this->name !== '';
+    }
+
+    private function validateEmail(): bool
+    {
+        return $this->email === null || filter_var($this->email, FILTER_VALIDATE_EMAIL) !== false;
     }
 }

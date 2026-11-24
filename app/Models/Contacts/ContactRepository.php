@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/Contact.php';
 require_once __DIR__ . '/ContactRepositoryInterface.php';
 
 final class ContactRepository implements ContactRepositoryInterface
@@ -23,7 +22,7 @@ final class ContactRepository implements ContactRepositoryInterface
         return $contacts;
     }
 
-    public function findById(mysqli $conn, int $id): ?Contact
+    public function findById(mysqli $conn, int $id): ?array
     {
         if ($id <= 0) {
             return null;
@@ -45,7 +44,7 @@ final class ContactRepository implements ContactRepositoryInterface
         return $row ? $this->hydrate($row) : null;
     }
 
-    public function insert(mysqli $conn, Contact $contact): bool
+    public function insert(mysqli $conn, array $contact): bool
     {
         $sql = "INSERT INTO contatos (usuario_id, nome, telefone, email) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
@@ -54,10 +53,10 @@ final class ContactRepository implements ContactRepositoryInterface
             return false;
         }
 
-        $userId = $contact->getUserId();
-        $name = $contact->getName();
-        $phone = $contact->getPhone();
-        $email = $contact->getEmail();
+        $userId = (int) $contact['user_id'];
+        $name = (string) $contact['name'];
+        $phone = (string) $contact['phone'];
+        $email = $contact['email'];
 
         $stmt->bind_param('isss', $userId, $name, $phone, $email);
         $ok = $stmt->execute();
@@ -66,11 +65,9 @@ final class ContactRepository implements ContactRepositoryInterface
         return $ok;
     }
 
-    public function update(mysqli $conn, Contact $contact): bool
+    public function update(mysqli $conn, int $id, array $contact): bool
     {
-        $id = $contact->getId();
-
-        if ($id === null) {
+        if ($id <= 0) {
             return false;
         }
 
@@ -81,9 +78,9 @@ final class ContactRepository implements ContactRepositoryInterface
             return false;
         }
 
-        $name = $contact->getName();
-        $phone = $contact->getPhone();
-        $email = $contact->getEmail();
+        $name = (string) $contact['name'];
+        $phone = (string) $contact['phone'];
+        $email = $contact['email'];
 
         $stmt->bind_param('sssi', $name, $phone, $email, $id);
         $ok = $stmt->execute();
@@ -112,17 +109,15 @@ final class ContactRepository implements ContactRepositoryInterface
         return $ok;
     }
 
-    private function hydrate(array $row): Contact
+    private function hydrate(array $row): array
     {
-        $contact = new Contact();
-        $contact->fill([
-            'id' => $row['id'],
+        return [
+            'id' => (int) $row['id'],
+            'user_id' => (int) $row['usuario_id'],
             'name' => $row['nome'],
             'phone' => $row['telefone'],
             'email' => $row['email'],
             'created_at' => $row['data_cadastro'],
-        ], (int) $row['usuario_id']);
-
-        return $contact;
+        ];
     }
 }
