@@ -26,7 +26,7 @@ final class UserController
     public function __construct(private mysqli $conn)
     {
         $this->userService = new UserService();
-        $this->currentUser = Auth::requireAdmin();
+        $this->currentUser = Auth::mustBe('ADMIN');
     }
 
     public function dispatch(string $action): void
@@ -48,7 +48,7 @@ final class UserController
     {
         $users = $this->userService->listAll($this->conn);
         $messageKey = $_GET['msg'] ?? '';
-        $notice = self::MESSAGES[$messageKey] ?? null;
+        $notice = UserController::MESSAGES[$messageKey] ?? null;
         $noticeIsError = str_starts_with((string) $messageKey, 'error');
         $currentUserId = $this->currentUser['id'];
 
@@ -76,7 +76,7 @@ final class UserController
             }
 
             $user->fill(['id' => $id, 'type' => $user->getType(), 'active' => $user->isActive(), 'created_at' => $user->getCreatedAt()] + $data);
-            $error = self::FORM_MESSAGES[$this->userService->getError() ?? ''] ?? self::MESSAGES['error'];
+            $error = UserController::FORM_MESSAGES[$this->userService->getError() ?? ''] ?? UserController::MESSAGES['error'];
         }
 
         require __DIR__ . '/../../Views/Users/edit.php';

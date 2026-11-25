@@ -14,7 +14,7 @@ final class ContactController
     {
         $this->contactService = new ContactService();
 
-        $sessionUser = Auth::requireUser();
+        $sessionUser = Auth::mustBe('USER');
         $user = (new UserService())->findById($conn, $sessionUser['id']);
 
         if ($user === null || !$user->isActive()) {
@@ -56,6 +56,7 @@ final class ContactController
     {
         $contact = new ContactEntity();
         $error = null;
+        $errorField = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->formData();
@@ -67,6 +68,7 @@ final class ContactController
 
             $contact->fill($data);
             $error = $this->errorMessage();
+            $errorField = $this->errorField();
         }
 
         require __DIR__ . '/../../Views/Contacts/create.php';
@@ -76,6 +78,7 @@ final class ContactController
     {
         $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
         $error = null;
+        $errorField = null;
         $contact = $this->contactService->findById($this->conn, $id, $this->userId);
 
         if ($contact === null) {
@@ -92,6 +95,7 @@ final class ContactController
 
             $contact->fill(['id' => $id] + $data, $contact->getUserId());
             $error = $this->errorMessage();
+            $errorField = $this->errorField();
         }
 
         require __DIR__ . '/../../Views/Contacts/edit.php';
@@ -117,6 +121,19 @@ final class ContactController
         ];
 
         return $messages[$this->contactService->getError() ?? ''] ?? 'Não foi possível salvar o contato. Tente novamente.';
+    }
+
+    private function errorField(): ?string
+    {
+        $fields = [
+            'error_name' => 'name',
+            'error_phone' => 'phone',
+            'error_duplicate_phone' => 'phone',
+            'error_email' => 'email',
+            'error_duplicate_email' => 'email',
+        ];
+
+        return $fields[$this->contactService->getError() ?? ''] ?? null;
     }
 
     private function delete(): void

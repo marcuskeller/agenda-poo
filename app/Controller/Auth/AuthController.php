@@ -104,12 +104,12 @@ final class AuthController
 
     private function message(): string
     {
-        return self::MESSAGES[$this->userService->getError() ?? ''] ?? 'Não foi possível concluir a operação. Tente novamente.';
+        return AuthController::MESSAGES[$this->userService->getError() ?? ''] ?? 'Não foi possível concluir a operação. Tente novamente.';
     }
 
     private function redirectHome(string $type): never
     {
-        header('Location: ' . ($type === 'ADMIN' ? '../Users/UserController.php?action=list' : '../Contacts/ContactController.php?action=list'));
+        header('Location: ' . Auth::home($type));
         exit;
     }
 }

@@ -8,7 +8,7 @@ final class UserRepository implements UserRepositoryInterface
 
     public function listAll(mysqli $conn): array
     {
-        $result = $conn->query('SELECT ' . self::COLUMNS . ' FROM users ORDER BY id');
+        $result = $conn->query('SELECT ' . UserRepository::COLUMNS . ' FROM users ORDER BY id');
 
         if (!$result) {
             return [];
@@ -92,7 +92,7 @@ final class UserRepository implements UserRepositoryInterface
 
     private function findOne(mysqli $conn, string $where, string $types, $value): ?array
     {
-        $stmt = $conn->prepare('SELECT ' . self::COLUMNS . ' FROM users WHERE ' . $where . ' LIMIT 1');
+        $stmt = $conn->prepare('SELECT ' . UserRepository::COLUMNS . ' FROM users WHERE ' . $where . ' LIMIT 1');
 
         if (!$stmt) {
             return null;

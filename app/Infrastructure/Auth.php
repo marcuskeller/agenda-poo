@@ -4,16 +4,9 @@ final class Auth
 {
     public const LOGIN_URL = '../Auth/AuthController.php?action=login';
 
-    public static function start(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    }
-
     public static function login(array $user): void
     {
-        self::start();
+        Auth::start();
         session_regenerate_id(true);
         $_SESSION['user'] = [
             'id' => (int) $user['id'],
@@ -25,51 +18,45 @@ final class Auth
 
     public static function logout(): void
     {
-        self::start();
+        Auth::start();
         $_SESSION = [];
         session_destroy();
     }
 
     public static function user(): ?array
     {
-        self::start();
+        Auth::start();
 
         return $_SESSION['user'] ?? null;
     }
 
-    public static function isAdmin(): bool
+    public static function mustBe(string $type): array
     {
-        return (self::user()['type'] ?? null) === 'ADMIN';
-    }
-
-    public static function requireUser(): array
-    {
-        $user = self::user();
+        $user = Auth::user();
 
         if ($user === null) {
-            self::redirect(self::LOGIN_URL);
+            Auth::redirect(Auth::LOGIN_URL);
         }
 
-        if ($user['type'] === 'ADMIN') {
-            self::redirect('../Users/UserController.php?action=list');
+        if ($user['type'] !== $type) {
+            Auth::redirect(Auth::home($user['type']));
         }
 
         return $user;
     }
 
-    public static function requireAdmin(): array
+    public static function home(string $type): string
     {
-        $user = self::user();
+        return $type === 'ADMIN'
+            ? '../Users/UserController.php?action=list'
+            : '../Contacts/ContactController.php?action=list';
+    }
 
-        if ($user === null) {
-            self::redirect(self::LOGIN_URL);
+    private static function start(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-
-        if ($user['type'] !== 'ADMIN') {
-            self::redirect('../Contacts/ContactController.php?action=list');
-        }
-
-        return $user;
     }
 
     private static function redirect(string $url): never
