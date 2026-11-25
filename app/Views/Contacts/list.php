@@ -1,12 +1,5 @@
 <?php
 
-$directAccess = realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__;
-
-if ($directAccess) {
-    header('Location: ../../Controller/Contacts/ContactController.php?action=list');
-    exit;
-}
-
 $e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
 $total = count($contacts);
@@ -26,7 +19,7 @@ $messageKey = $_GET['msg'] ?? '';
 $notice = $messages[$messageKey] ?? null;
 $noticeIsError = str_starts_with((string) $messageKey, 'error');
 
-$controllerUrl = $directAccess ? '../../Controller/Contacts/ContactController.php' : 'ContactController.php';
+$controllerUrl = 'ContactController.php';
 $listUrl = $controllerUrl . '?action=list';
 $createUrl = $controllerUrl . '?action=create';
 $editUrl = $controllerUrl . '?action=edit';
@@ -41,13 +34,14 @@ $hideHeaderLink = true;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contatos | Agenda Telefônica</title>
-    <link rel="stylesheet" href="<?= $directAccess ? '../style.css' : '../../Views/style.css' ?>">
+    <link rel="stylesheet" href="../../Views/style.css">
 </head>
 <body>
 <?php require_once __DIR__ . '/../Components/navbar.php'; ?>
 
     <main class="page-shell">
         <section class="welcome" aria-label="Boas-vindas">
+            <p class="eyebrow">Boas-vindas</p>
             <p class="welcome-text">Bem-vindo(a), <strong><?= $e(Auth::user()['name'] ?? '') ?></strong>!</p>
         </section>
 
@@ -73,7 +67,7 @@ $hideHeaderLink = true;
 
             <?php if ($total === 0): ?>
                 <div class="empty-state">
-                    <span class="empty-mark" aria-hidden="true">+</span>
+                    <a class="empty-mark" href="<?= $e($createUrl) ?>" aria-label="Adicionar contato">+</a>
                     <h3 class="empty-title">Nenhum contato ainda</h3>
                     <p class="empty-copy">Sua agenda está vazia. Cadastre o primeiro contato para começar.</p>
                     <a class="button-primary" href="<?= $e($createUrl) ?>">Adicionar contato</a>

@@ -24,6 +24,11 @@ $hideHeaderLink = true;
 <?php require_once __DIR__ . '/../Components/navbar.php'; ?>
 
     <main class="page-shell">
+        <section class="welcome" aria-label="Boas-vindas">
+            <p class="eyebrow">Boas-vindas</p>
+            <p class="welcome-text">Bem-vindo(a), <strong><?= $e(Auth::user()['name'] ?? '') ?></strong>!</p>
+        </section>
+
         <section class="page-intro" aria-labelledby="page-title">
             <div>
                 <p class="eyebrow">Administração</p>
