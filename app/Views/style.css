@@ -116,7 +116,7 @@ input:focus-visible {
     color: var(--muted);
 }
 
-.header-caption {
+.header-link {
     margin-left: auto;
 }
 
@@ -154,6 +154,20 @@ input:focus-visible {
     margin: 0 auto;
     padding: 56px 0 72px;
     animation: arrive 420ms ease both;
+}
+
+.welcome {
+    margin-bottom: 28px;
+    padding: 16px 20px;
+    border: 1px solid rgba(29, 44, 34, 0.12);
+    border-left: 3px solid var(--coral);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.welcome-text {
+    margin: 0;
+    font-size: 16px;
 }
 
 .page-intro {
@@ -510,6 +524,49 @@ h1 {
     color: var(--forest);
     text-decoration: underline;
     text-underline-offset: 3px;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-user form {
+    margin: 0;
+}
+
+.header-user-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.header-logout {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.auth-links {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 99px;
+    background: #e9f4d8;
+    color: #4d7427;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-badge--inactive {
+    background: #fdeceb;
+    color: #7a1f14;
 }
 
 .error-surface {

@@ -8,11 +8,15 @@ final class ContactEntity
     private string $phone = '';
     private $email = null;
     private $createdAt = null;
+    private ?string $ownerName = null;
+    private ?string $ownerEmail = null;
 
     public function fill(array $data, int $userId = 1): void
     {
         $email = trim((string) ($data['email'] ?? ''));
 
+        $this->ownerName = $data['owner_name'] ?? null;
+        $this->ownerEmail = $data['owner_email'] ?? null;
         $this->id = isset($data['id']) && (int) $data['id'] > 0 ? (int) $data['id'] : null;
         $this->userId = $userId;
         $this->name = trim((string) ($data['name'] ?? ''));
@@ -82,6 +86,16 @@ final class ContactEntity
     public function getCreatedAt(): ?string
     {
         return $this->createdAt;
+    }
+
+    public function getOwnerName(): ?string
+    {
+        return $this->ownerName;
+    }
+
+    public function getOwnerEmail(): ?string
+    {
+        return $this->ownerEmail;
     }
 
     public function toArray(): array

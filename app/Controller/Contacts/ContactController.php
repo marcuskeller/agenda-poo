@@ -1,15 +1,29 @@
 <?php
 
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
+require_once __DIR__ . '/../../Infrastructure/Auth.php';
 require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
+require_once __DIR__ . '/../../Models/Users/UserService.php';
 
 final class ContactController
 {
     private ContactService $contactService;
+    private int $userId;
 
     public function __construct(private mysqli $conn)
     {
         $this->contactService = new ContactService();
+
+        $sessionUser = Auth::requireUser();
+        $user = (new UserService())->findById($conn, $sessionUser['id']);
+
+        if ($user === null || !$user->isActive()) {
+            Auth::logout();
+            header('Location: ' . Auth::LOGIN_URL);
+            exit;
+        }
+
+        $this->userId = $user->getId();
     }
 
     public function dispatch(string $action): void
@@ -32,7 +46,7 @@ final class ContactController
 
     private function index(): void
     {
-        $contacts = $this->contactService->listAll($this->conn);
+        $contacts = $this->contactService->listAll($this->conn, $this->userId);
 
         $conn = $this->conn;
         require __DIR__ . '/../../Views/Contacts/list.php';
@@ -45,7 +59,7 @@ final class ContactController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->formData();
-            $created = $this->contactService->create($this->conn, $data);
+            $created = $this->contactService->create($this->conn, $this->userId, $data);
 
             if ($created) {
                 $this->redirect('created');
@@ -62,7 +76,7 @@ final class ContactController
     {
         $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
         $error = null;
-        $contact = $this->contactService->findById($this->conn, $id);
+        $contact = $this->contactService->findById($this->conn, $id, $this->userId);
 
         if ($contact === null) {
             $this->redirect('error');
@@ -70,7 +84,7 @@ final class ContactController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = $this->formData();
-            $updated = $this->contactService->update($this->conn, $id, $data);
+            $updated = $this->contactService->update($this->conn, $this->userId, $id, $data);
 
             if ($updated) {
                 $this->redirect('updated');
@@ -110,17 +124,17 @@ final class ContactController
         $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $deleted = $this->contactService->delete($this->conn, $id);
+            $deleted = $this->contactService->delete($this->conn, $this->userId, $id);
             $this->redirect($deleted ? 'deleted' : 'error');
         }
 
-        $contact = $this->contactService->findById($this->conn, $id);
+        $contact = $this->contactService->findById($this->conn, $id, $this->userId);
 
         if ($contact === null) {
             $this->redirect('error');
         }
 
-        $contacts = $this->contactService->listAll($this->conn);
+        $contacts = $this->contactService->listAll($this->conn, $this->userId);
         $conn = $this->conn;
         require __DIR__ . '/../../Views/Contacts/delete.php';
     }
