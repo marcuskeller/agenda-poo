@@ -22,7 +22,7 @@ final class ContactService
         }
 
         try {
-            $duplicate = $repository->findDuplicateField($conn, $contact->getPhone(), $contact->getEmail(), (int) $contact->getId());
+            $duplicate = $repository->findDuplicateField($conn, $contact->getUserId(), $contact->getPhone(), $contact->getEmail(), (int) $contact->getId());
 
             if ($duplicate !== null) {
                 $this->error = 'error_duplicate_' . $duplicate;
@@ -42,10 +42,10 @@ final class ContactService
         }
     }
 
-    public function listAll(mysqli $conn): array
+    public function listAll(mysqli $conn, int $userId): array
     {
         $repository = new ContactRepository();
-        $rows = $repository->listAll($conn);
+        $rows = $repository->listAll($conn, $userId);
         $contacts = [];
 
         for ($i = 0, $total = count($rows); $i < $total; $i++) {
@@ -55,49 +55,47 @@ final class ContactService
         return $contacts;
     }
 
-    public function findById(mysqli $conn, int $id): ?ContactEntity
+    public function findById(mysqli $conn, int $id, int $userId): ?ContactEntity
     {
         $repository = new ContactRepository();
-        $row = $repository->findById($conn, $id);
+        $row = $repository->findById($conn, $id, $userId);
 
         return $row === null ? null : $this->createContactFromRow($row);
     }
 
-    public function create(mysqli $conn, array $data): bool
+    public function create(mysqli $conn, int $userId, array $data): bool
     {
         $contact = new ContactEntity();
-        $contact->fill($data);
+        $contact->fill($data, $userId);
 
         $repository = new ContactRepository();
 
         return $this->persist($conn, $repository, $contact, fn () => $repository->insert($conn, $contact->toArray()));
     }
 
-    public function update(mysqli $conn, int $id, array $data): bool
+    public function update(mysqli $conn, int $userId, int $id, array $data): bool
     {
-        $existing = $this->findById($conn, $id);
-
-        if ($existing === null) {
+        if ($this->findById($conn, $id, $userId) === null) {
             return false;
         }
 
         $contact = new ContactEntity();
-        $contact->fill(['id' => $id] + $data, $existing->getUserId());
+        $contact->fill(['id' => $id] + $data, $userId);
 
         $repository = new ContactRepository();
 
         return $this->persist($conn, $repository, $contact, fn () => $repository->update($conn, $id, $contact->toArray()));
     }
 
-    public function delete(mysqli $conn, int $id): bool
+    public function delete(mysqli $conn, int $userId, int $id): bool
     {
-        if ($this->findById($conn, $id) === null) {
+        if ($this->findById($conn, $id, $userId) === null) {
             return false;
         }
 
         $repository = new ContactRepository();
 
-        return $repository->delete($conn, $id);
+        return $repository->delete($conn, $id, $userId);
     }
 
     private function createContactFromRow(array $row): ContactEntity
@@ -109,6 +107,8 @@ final class ContactService
             'phone' => $row['phone'],
             'email' => $row['email'],
             'created_at' => $row['created_at'],
+            'owner_name' => $row['owner_name'] ?? null,
+            'owner_email' => $row['owner_email'] ?? null,
         ], (int) $row['user_id']);
 
         return $contact;

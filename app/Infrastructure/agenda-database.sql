@@ -14,6 +14,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password CHAR(32) NOT NULL,
     type ENUM('ADMIN', 'USER') NOT NULL DEFAULT 'USER',
+    active TINYINT(1) NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id)
@@ -24,11 +25,14 @@ CREATE TABLE contacts (
     id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20) NOT NULL UNIQUE,
-    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id),
+
+    UNIQUE KEY uq_contact_user_phone (user_id, phone),
+    UNIQUE KEY uq_contact_user_email (user_id, email),
 
     CONSTRAINT fk_contact_user
         FOREIGN KEY (user_id)

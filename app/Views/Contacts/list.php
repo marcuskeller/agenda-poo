@@ -3,9 +3,8 @@
 $directAccess = realpath($_SERVER['SCRIPT_FILENAME'] ?? '') === __FILE__;
 
 if ($directAccess) {
-    require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
-    require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
-    $contacts = (new ContactService())->listAll($conn);
+    header('Location: ../../Controller/Contacts/ContactController.php?action=list');
+    exit;
 }
 
 $e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -34,10 +33,7 @@ $editUrl = $controllerUrl . '?action=edit';
 $deleteUrl = $controllerUrl . '?action=delete';
 
 $brandHref = $listUrl;
-$headerCaption = 'Organização pessoal / 01';
-$headerLinkHref = $createUrl;
-$headerLinkText = 'Novo contato';
-$showPlus = true;
+$hideHeaderLink = true;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -51,6 +47,10 @@ $showPlus = true;
 <?php require_once __DIR__ . '/../Components/navbar.php'; ?>
 
     <main class="page-shell">
+        <section class="welcome" aria-label="Boas-vindas">
+            <p class="welcome-text">Bem-vindo(a), <strong><?= $e(Auth::user()['name'] ?? '') ?></strong>!</p>
+        </section>
+
         <section class="page-intro" aria-labelledby="page-title">
             <div>
                 <p class="eyebrow">Visão geral</p>
@@ -83,7 +83,6 @@ $showPlus = true;
                     <table class="contacts-table">
                         <thead>
                             <tr>
-                                <th scope="col">ID</th>
                                 <th scope="col">Nome</th>
                                 <th scope="col">Telefone</th>
                                 <th scope="col">E-mail</th>
@@ -100,7 +99,6 @@ $showPlus = true;
                                     : '—';
                                 ?>
                                 <tr>
-                                    <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $id) ?></td>
                                     <td class="contact-name" data-label="Nome"><?= $e($contact->getName()) ?></td>
                                     <td data-label="Telefone"><?= $e($contact->getPhone()) ?></td>
                                     <td class="contact-email" data-label="E-mail"><?= $contact->getEmail() !== null ? $e($contact->getEmail()) : '—' ?></td>

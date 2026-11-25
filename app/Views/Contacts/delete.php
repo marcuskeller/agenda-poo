@@ -10,10 +10,7 @@ $editUrl = 'ContactController.php?action=edit';
 $deleteUrl = 'ContactController.php?action=delete';
 
 $brandHref = $listUrl;
-$headerCaption = 'Organização pessoal / 01';
-$headerLinkHref = $createUrl;
-$headerLinkText = 'Novo contato';
-$showPlus = true;
+$hideHeaderLink = true;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -49,6 +46,7 @@ $showPlus = true;
                             <th scope="col">Telefone</th>
                             <th scope="col">E-mail</th>
                             <th scope="col">Cadastro</th>
+                            <th scope="col">Cadastrado por</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
@@ -66,6 +64,7 @@ $showPlus = true;
                                 <td data-label="Telefone"><?= $e($item->getPhone()) ?></td>
                                 <td class="contact-email" data-label="E-mail"><?= $item->getEmail() !== null ? $e($item->getEmail()) : '—' ?></td>
                                 <td class="contact-date" data-label="Cadastro"><?= $e($date) ?></td>
+                                <td data-label="Cadastrado por"><?= $e($item->getOwnerName()) ?> <span class="field-hint">(<?= $e($item->getOwnerEmail()) ?>)</span></td>
                                 <td data-label="Ações">
                                     <div class="row-actions">
                                         <a class="row-action" href="<?= $e($editUrl) ?>?id=<?= $itemId ?>">Editar</a>
