@@ -37,7 +37,7 @@ final class UserService
         $user->fill($data);
         $repository = new UserRepository();
 
-        return $this->persist($user, $repository, 0, true, fn () => $repository->insert($conn, $user->toArray()), $conn);
+        return $this->persist($user, $repository, true, $conn);
     }
 
     public function update(mysqli $conn, int $id, array $data): bool
@@ -54,7 +54,7 @@ final class UserService
         $user = new UserEntity();
         $user->fill(['id' => $id, 'type' => $existing['type'], 'active' => $existing['active']] + $data);
 
-        return $this->persist($user, $repository, $id, false, fn () => $repository->update($conn, $id, $user->toArray()), $conn);
+        return $this->persist($user, $repository, false, $conn);
     }
 
     public function toggleActive(mysqli $conn, int $id, int $currentUserId): ?bool
@@ -106,7 +106,7 @@ final class UserService
         return $row;
     }
 
-    private function persist(UserEntity $user, UserRepository $repository, int $excludeId, bool $requirePassword, callable $operation, mysqli $conn): bool
+    private function persist(UserEntity $user, UserRepository $repository, bool $requirePassword, mysqli $conn): bool
     {
         $this->error = $user->validationError($requirePassword);
 
@@ -114,6 +114,7 @@ final class UserService
             return false;
         }
 
+        $excludeId = $user->getId() ?? 0;
         $sameEmail = $repository->findByEmail($conn, $user->getEmail());
 
         if ($sameEmail !== null && $sameEmail['id'] !== $excludeId) {
@@ -123,7 +124,11 @@ final class UserService
         }
 
         try {
-            return $operation();
+            if ($user->getId() === null) {
+                return $repository->insert($conn, $user->toArray());
+            }
+
+            return $repository->update($conn, $user->getId(), $user->toArray());
         } catch (mysqli_sql_exception $e) {
             if ($e->getCode() !== 1062) {
                 throw $e;

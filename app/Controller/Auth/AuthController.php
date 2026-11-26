@@ -43,12 +43,12 @@ final class AuthController extends BaseController
 
             if ($user !== null) {
                 Auth::login($user);
-                $this->redirectHome($user['type']);
+                $this->redirectTo(Auth::home($user['type']));
             }
 
             $error = $this->message();
-        } elseif (Auth::user() !== null) {
-            $this->redirectHome(Auth::user()['type']);
+        } elseif (($user = Auth::user()) !== null) {
+            $this->redirectTo(Auth::home($user['type']));
         }
 
         require __DIR__ . '/../../Views/Auth/login.php';
@@ -72,7 +72,7 @@ final class AuthController extends BaseController
 
                 if ($user !== null) {
                     Auth::login($user);
-                    $this->redirectHome($user['type']);
+                    $this->redirectTo(Auth::home($user['type']));
                 }
 
                 $this->redirectTo('AuthController.php?action=login&msg=registered');
@@ -104,10 +104,6 @@ final class AuthController extends BaseController
         return GlobalMessages::get($errorKey) ?? (string) GlobalMessages::get('error');
     }
 
-    private function redirectHome(string $type): never
-    {
-        $this->redirectTo(Auth::home($type));
-    }
 }
 
 $controller = new AuthController();

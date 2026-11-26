@@ -13,7 +13,7 @@ final class ContactService
         return $this->error;
     }
 
-    private function persist(mysqli $conn, ContactRepository $repository, ContactEntity $contact, callable $operation): bool
+    private function persist(mysqli $conn, ContactRepository $repository, ContactEntity $contact): bool
     {
         $this->error = $contact->validationError();
 
@@ -30,7 +30,11 @@ final class ContactService
                 return false;
             }
 
-            return $operation();
+            if ($contact->getId() === null) {
+                return $repository->insert($conn, $contact->toArray());
+            }
+
+            return $repository->update($conn, $contact->getId(), $contact->toArray());
         } catch (mysqli_sql_exception $e) {
             if ($e->getCode() !== 1062) {
                 throw $e;
@@ -70,7 +74,7 @@ final class ContactService
 
         $repository = new ContactRepository();
 
-        return $this->persist($conn, $repository, $contact, fn () => $repository->insert($conn, $contact->toArray()));
+        return $this->persist($conn, $repository, $contact);
     }
 
     public function update(mysqli $conn, int $userId, int $id, array $data): bool
@@ -84,7 +88,7 @@ final class ContactService
 
         $repository = new ContactRepository();
 
-        return $this->persist($conn, $repository, $contact, fn () => $repository->update($conn, $id, $contact->toArray()));
+        return $this->persist($conn, $repository, $contact);
     }
 
     public function delete(mysqli $conn, int $userId, int $id): bool
