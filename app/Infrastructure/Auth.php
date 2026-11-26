@@ -59,7 +59,7 @@ final class Auth
         }
     }
 
-    private static function redirect(string $url): never
+    private static function redirect(string $url): void
     {
         header('Location: ' . $url);
         exit;

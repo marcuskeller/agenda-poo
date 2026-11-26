@@ -94,7 +94,7 @@ final class UserController extends BaseController
         $this->redirect($active ? 'activated' : 'deactivated');
     }
 
-    private function redirect(string $message): never
+    private function redirect(string $message): void
     {
         $this->redirectTo('UserController.php?action=list&msg=' . urlencode($message));
     }

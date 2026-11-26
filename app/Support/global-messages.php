@@ -2,6 +2,14 @@
 
 final class GlobalMessages
 {
+    private const ERROR_FIELDS = [
+        'error_name' => 'name',
+        'error_phone' => 'phone',
+        'error_duplicate_phone' => 'phone',
+        'error_email' => 'email',
+        'error_duplicate_email' => 'email',
+    ];
+
     private const MESSAGES = [
         'created' => 'Contato criado com sucesso.',
         'updated' => 'Contato atualizado com sucesso.',
@@ -14,8 +22,8 @@ final class GlobalMessages
         'error_self' => 'Você não pode inativar o seu próprio usuário.',
         'error_name' => 'Informe o nome do contato.',
         'error_phone' => 'Telefone inválido. Informe DDD e número (10 a 13 dígitos).',
-        'error_email' => 'E-mail inválido. Verifique o endereço informado.',
         'error_duplicate_phone' => 'Já existe um contato cadastrado com este telefone.',
+        'error_email' => 'E-mail inválido. Verifique o endereço informado.',
         'error_duplicate_email' => 'Já existe um contato cadastrado com este e-mail.',
         'error_user_name' => 'Informe o nome do usuário.',
         'error_duplicate_user_email' => 'Já existe um usuário cadastrado com este e-mail.',
@@ -33,5 +41,10 @@ final class GlobalMessages
         }
 
         return self::MESSAGES[$key] ?? $fallback;
+    }
+
+    public static function fieldFor(?string $key): ?string
+    {
+        return self::ERROR_FIELDS[$key ?? ''] ?? null;
     }
 }

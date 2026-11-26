@@ -14,7 +14,7 @@ abstract class BaseController
         return ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST';
     }
 
-    protected function redirectTo(string $url): never
+    protected function redirectTo(string $url): void
     {
         header('Location: ' . $url);
         exit;

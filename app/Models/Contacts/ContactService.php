@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/ContactEntity.php';
-require_once __DIR__ . '/ContactRepositoryInterface.php';
 require_once __DIR__ . '/ContactRepository.php';
 
 final class ContactService

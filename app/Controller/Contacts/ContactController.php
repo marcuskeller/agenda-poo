@@ -69,7 +69,7 @@ final class ContactController extends BaseController
 
             $contact->fill($data, $this->userId);
             $error = $this->errorMessage();
-            $errorField = $this->errorField();
+            $errorField = GlobalMessages::fieldFor($this->contactService->getError());
         }
 
         require __DIR__ . '/../../Views/Contacts/create.php';
@@ -96,7 +96,7 @@ final class ContactController extends BaseController
 
             $contact->fill(['id' => $id] + $data, $contact->getUserId());
             $error = $this->errorMessage();
-            $errorField = $this->errorField();
+            $errorField = GlobalMessages::fieldFor($this->contactService->getError());
         }
 
         require __DIR__ . '/../../Views/Contacts/edit.php';
@@ -113,20 +113,13 @@ final class ContactController extends BaseController
 
     private function errorMessage(): string
     {
-        return GlobalMessages::get($this->contactService->getError()) ?? (string) GlobalMessages::get('error');
-    }
+        $message = GlobalMessages::get($this->contactService->getError());
 
-    private function errorField(): ?string
-    {
-        $fields = [
-            'error_name' => 'name',
-            'error_phone' => 'phone',
-            'error_duplicate_phone' => 'phone',
-            'error_email' => 'email',
-            'error_duplicate_email' => 'email',
-        ];
+        if ($message === null) {
+            $message = GlobalMessages::get('error');
+        }
 
-        return $fields[$this->contactService->getError() ?? ''] ?? null;
+        return (string) $message;
     }
 
     private function delete(): void
@@ -148,7 +141,7 @@ final class ContactController extends BaseController
         require __DIR__ . '/../../Views/Contacts/delete.php';
     }
 
-    private function redirect(string $message): never
+    private function redirect(string $message): void
     {
         $this->redirectTo('ContactController.php?action=list&msg=' . urlencode($message));
     }
