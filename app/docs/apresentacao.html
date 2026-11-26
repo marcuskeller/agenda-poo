@@ -70,6 +70,7 @@
             padding: clamp(42px, 6vw, 85px) 0;
         }
         .slide + .slide { border-top: 1px solid var(--line); }
+        .closing-slide { align-items: center; text-align: center; }
         .eyebrow { margin: 0 0 18px; }
         .eyebrow span { color: var(--forest); margin-right: 10px; }
         h1, h2, h3, p { margin-top: 0; }
@@ -384,7 +385,7 @@ public function getName(): string
             <div class="diagram-scroll" tabindex="0" role="region" aria-label="Diagrama de contatos; role horizontalmente para ver o desenho completo">
                 <svg class="diagram" viewBox="0 0 1100 450" role="img" aria-labelledby="contacts-title contacts-desc">
                     <title id="contacts-title">Diagrama de classes de contatos</title>
-                    <desc id="contacts-desc">ContactController usa ContactService. ContactService usa ContactEntity e ContactRepository. ContactRepository implementa ContactRepositoryInterface. São exibidos apenas alguns membros; ContactController também utiliza Auth e UserService, apresentados no próximo diagrama.</desc>
+                    <desc id="contacts-desc">ContactController herda de BaseController e usa ContactService. BaseController concentra a conexão e operações HTTP comuns. ContactService usa ContactEntity e ContactRepository. ContactRepository implementa ContactRepositoryInterface. São exibidos apenas alguns membros; ContactController também utiliza Auth e UserService, apresentados no próximo diagrama.</desc>
                     <defs>
                         <marker id="contact-use" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path class="arrow" d="M1 1 L10 6 L1 11"/></marker>
                         <marker id="contact-implements" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path class="triangle" d="M1 1 L12 7 L1 13 Z"/></marker>
@@ -426,7 +427,7 @@ public function getName(): string
                     </g>
                 </svg>
             </div>
-            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; seta tracejada aberta = usa; triângulo tracejado = implementa interface. Membros e relações selecionados; <code>…</code> omite parâmetros. Em telas pequenas, role o diagrama horizontalmente. O controller também usa <code>Auth</code> e <code>UserService</code>.</p>
+            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; seta tracejada aberta = usa; triângulo tracejado = implementa interface. Membros e relações selecionados; <code>…</code> omite parâmetros. <code>ContactController</code> herda de <code>BaseController</code>. Em telas pequenas, role o diagrama horizontalmente. O controller também usa <code>Auth</code> e <code>UserService</code>.</p>
         </section>
 
         <section class="slide diagram-slide" aria-labelledby="slide-10">
@@ -435,7 +436,7 @@ public function getName(): string
             <div class="diagram-scroll" tabindex="0" role="region" aria-label="Diagrama de usuários e autenticação; role horizontalmente para ver o desenho completo">
                 <svg class="diagram" viewBox="0 0 1100 530" role="img" aria-labelledby="users-title users-desc">
                     <title id="users-title">Diagrama de classes de usuários e autenticação</title>
-                    <desc id="users-desc">AuthController e UserController usam UserService e Auth. UserService usa UserEntity e UserRepository. UserRepository implementa UserRepositoryInterface. Apenas alguns membros e relações são exibidos.</desc>
+                    <desc id="users-desc">AuthController e UserController herdam de BaseController e usam UserService e Auth. BaseController concentra a conexão e operações HTTP comuns. UserService usa UserEntity e UserRepository. UserRepository implementa UserRepositoryInterface. Apenas alguns membros e relações são exibidos.</desc>
                     <defs>
                         <marker id="user-use" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path class="arrow" d="M1 1 L10 6 L1 11"/></marker>
                         <marker id="user-implements" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path class="triangle" d="M1 1 L12 7 L1 13 Z"/></marker>
@@ -491,7 +492,7 @@ public function getName(): string
                     </g>
                 </svg>
             </div>
-            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; seta tracejada aberta = usa; triângulo tracejado = implementa interface; <code>{static}</code> = método estático. Membros e relações selecionados; <code>…</code> omite parâmetros. Em telas pequenas, role o diagrama horizontalmente.</p>
+            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; seta tracejada aberta = usa; triângulo tracejado = implementa interface; <code>{static}</code> = método estático. <code>AuthController</code> e <code>UserController</code> herdam de <code>BaseController</code>. Membros e relações selecionados; <code>…</code> omite parâmetros. Em telas pequenas, role o diagrama horizontalmente.</p>
         </section>
 
         <section class="slide" aria-labelledby="slide-11">
@@ -500,9 +501,9 @@ public function getName(): string
             <div class="grid two">
                 <div class="card">
                     <p class="card-label">E a herança?</p>
-                    <h3>Não foi utilizada.</h3>
-                    <p>As classes colaboram sem uma classe-pai. Uma hierarquia só faria sentido com uma relação adequada entre os tipos.</p>
-                    <p><code>implements</code> cumpre um contrato de interface; não é herança de implementação com <code>extends</code>.</p>
+                    <h3>Foi aplicada aos controllers.</h3>
+                    <p><code>ContactController</code>, <code>AuthController</code> e <code>UserController</code> herdam de <code>BaseController</code>, que compartilha a conexão e operações HTTP comuns.</p>
+                    <p><code>implements</code> cumpre um contrato de interface; <code>extends</code> herda comportamento de uma classe-base.</p>
                 </div>
                 <div class="card dark">
                     <p class="card-label">O que aprendemos</p>
@@ -510,6 +511,11 @@ public function getName(): string
                 </div>
             </div>
             <p class="note">A versão POO também amplia o escopo: autenticação e gestão de usuários não existiam no CRUD procedural analisado.</p>
+        </section>
+
+        <section class="slide closing-slide" aria-labelledby="slide-12">
+            <p class="eyebrow"><span>12 / ENCERRAMENTO</span> Agenda Telefônica</p>
+            <h2 id="slide-12">Muito obrigado pela <span class="accent">atenção.</span></h2>
         </section>
     </main>
 

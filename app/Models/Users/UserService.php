@@ -57,9 +57,33 @@ final class UserService
         return $this->persist($user, $repository, $id, false, fn () => $repository->update($conn, $id, $user->toArray()), $conn);
     }
 
-    public function setActive(mysqli $conn, int $id, bool $active): bool
+    public function toggleActive(mysqli $conn, int $id, int $currentUserId): ?bool
     {
-        return (new UserRepository())->setActive($conn, $id, $active);
+        $this->error = null;
+
+        if ($id === $currentUserId) {
+            $this->error = 'error_self';
+
+            return null;
+        }
+
+        $user = $this->findById($conn, $id);
+
+        if ($user === null) {
+            $this->error = 'error';
+
+            return null;
+        }
+
+        $active = !$user->isActive();
+
+        if (!(new UserRepository())->setActive($conn, $id, $active)) {
+            $this->error = 'error';
+
+            return null;
+        }
+
+        return $active;
     }
 
     public function authenticate(mysqli $conn, string $email, string $password): ?array

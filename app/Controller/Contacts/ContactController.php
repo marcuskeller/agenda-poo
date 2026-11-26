@@ -2,19 +2,19 @@
 
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
+require_once __DIR__ . '/../BaseController.php';
 require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
 require_once __DIR__ . '/../../Support/global-messages.php';
 
-final class ContactController
+final class ContactController extends BaseController
 {
-    private mysqli $conn;
     private ContactService $contactService;
     private int $userId;
 
     public function initialize(mysqli $conn): void
     {
-        $this->conn = $conn;
+        $this->setConnection($conn);
         $this->contactService = new ContactService();
 
         $sessionUser = Auth::mustBe('USER');
@@ -22,8 +22,7 @@ final class ContactController
 
         if ($user === null || !$user->isActive()) {
             Auth::logout();
-            header('Location: ' . Auth::LOGIN_URL);
-            exit;
+            $this->redirectTo(Auth::LOGIN_URL);
         }
 
         $this->userId = $user->getId();
@@ -60,7 +59,7 @@ final class ContactController
         $error = null;
         $errorField = null;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $data = $this->formData();
             $created = $this->contactService->create($this->conn, $this->userId, $data);
 
@@ -87,7 +86,7 @@ final class ContactController
             $this->redirect('error');
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $data = $this->formData();
             $updated = $this->contactService->update($this->conn, $this->userId, $id, $data);
 
@@ -134,7 +133,7 @@ final class ContactController
     {
         $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $deleted = $this->contactService->delete($this->conn, $this->userId, $id);
             $this->redirect($deleted ? 'deleted' : 'error');
         }
@@ -151,8 +150,7 @@ final class ContactController
 
     private function redirect(string $message): never
     {
-        header('Location: ContactController.php?action=list&msg=' . urlencode($message));
-        exit;
+        $this->redirectTo('ContactController.php?action=list&msg=' . urlencode($message));
     }
 }
 

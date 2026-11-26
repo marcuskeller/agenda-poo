@@ -2,18 +2,18 @@
 
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
+require_once __DIR__ . '/../BaseController.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
 require_once __DIR__ . '/../../Support/global-messages.php';
 
-final class UserController
+final class UserController extends BaseController
 {
-    private mysqli $conn;
     private UserService $userService;
     private array $currentUser;
 
     public function initialize(mysqli $conn): void
     {
-        $this->conn = $conn;
+        $this->setConnection($conn);
         $this->userService = new UserService();
         $this->currentUser = Auth::mustBe('ADMIN');
     }
@@ -54,7 +54,7 @@ final class UserController
             $this->redirect('error');
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $data = [
                 'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
@@ -80,26 +80,23 @@ final class UserController
     private function toggle(): void
     {
         $id = (int) ($_POST['id'] ?? 0);
-        $user = $this->userService->findById($this->conn, $id);
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || $user === null) {
+        if (!$this->isPost()) {
             $this->redirect('error');
         }
 
-        if ($id === $this->currentUser['id']) {
-            $this->redirect('error_self');
+        $active = $this->userService->toggleActive($this->conn, $id, $this->currentUser['id']);
+
+        if ($active === null) {
+            $this->redirect($this->userService->getError() ?? 'error');
         }
 
-        $activate = !$user->isActive();
-        $ok = $this->userService->setActive($this->conn, $id, $activate);
-
-        $this->redirect($ok ? ($activate ? 'activated' : 'deactivated') : 'error');
+        $this->redirect($active ? 'activated' : 'deactivated');
     }
 
     private function redirect(string $message): never
     {
-        header('Location: UserController.php?action=list&msg=' . urlencode($message));
-        exit;
+        $this->redirectTo('UserController.php?action=list&msg=' . urlencode($message));
     }
 }
 

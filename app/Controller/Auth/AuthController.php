@@ -2,17 +2,17 @@
 
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
+require_once __DIR__ . '/../BaseController.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
 require_once __DIR__ . '/../../Support/global-messages.php';
 
-final class AuthController
+final class AuthController extends BaseController
 {
-    private mysqli $conn;
     private UserService $userService;
 
     public function initialize(mysqli $conn): void
     {
-        $this->conn = $conn;
+        $this->setConnection($conn);
         $this->userService = new UserService();
     }
 
@@ -37,7 +37,7 @@ final class AuthController
         $notice = ($_GET['msg'] ?? '') === 'registered' ? GlobalMessages::get('registered') : null;
         $email = '';
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $email = trim((string) ($_POST['email'] ?? ''));
             $user = $this->userService->authenticate($this->conn, $email, (string) ($_POST['password'] ?? ''));
 
@@ -59,7 +59,7 @@ final class AuthController
         $error = null;
         $data = ['name' => '', 'email' => ''];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $data = [
                 'name' => $_POST['name'] ?? '',
                 'email' => $_POST['email'] ?? '',
@@ -75,8 +75,7 @@ final class AuthController
                     $this->redirectHome($user['type']);
                 }
 
-                header('Location: AuthController.php?action=login&msg=registered');
-                exit;
+                $this->redirectTo('AuthController.php?action=login&msg=registered');
             }
 
             $error = $this->message();
@@ -87,12 +86,11 @@ final class AuthController
 
     private function logout(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             Auth::logout();
         }
 
-        header('Location: AuthController.php?action=login');
-        exit;
+        $this->redirectTo('AuthController.php?action=login');
     }
 
     private function message(): string
@@ -108,8 +106,7 @@ final class AuthController
 
     private function redirectHome(string $type): never
     {
-        header('Location: ' . Auth::home($type));
-        exit;
+        $this->redirectTo(Auth::home($type));
     }
 }
 

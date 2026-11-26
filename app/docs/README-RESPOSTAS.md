@@ -37,6 +37,7 @@ Essa divisão não é totalmente rígida: por exemplo, os controllers ainda leem
 
 | Classe | Responsabilidade |
 | --- | --- |
+| [BaseController](app/Controller/BaseController.php) | Reunir a conexão com o banco e operações HTTP comuns aos controllers. |
 | [ContactController](app/Controller/Contacts/ContactController.php) | Controlar as ações de listagem, criação, edição e exclusão de contatos. |
 | [AuthController](app/Controller/Auth/AuthController.php) | Controlar cadastro, login e logout. |
 | [UserController](app/Controller/Users/UserController.php) | Controlar a listagem, edição e ativação ou inativação de usuários pelo administrador. |
@@ -82,9 +83,9 @@ Esses contratos padronizam as operações de persistência e podem servir de bas
 
 ## 9. Foi utilizada herança? Se sim, qual foi sua finalidade? Se não, justifique.
 
-Não há herança entre as classes da aplicação: nenhuma delas usa `extends`, e as classes do projeto são declaradas como `final`. Os repositórios usam `implements` para cumprir interfaces, o que não é herança de implementação.
+Sim. `ContactController`, `AuthController` e `UserController` herdam de `BaseController`, que reúne a conexão e métodos HTTP compartilhados. Os repositórios usam `implements` para cumprir interfaces; isso implementa um contrato, não herda comportamento de uma classe.
 
-As responsabilidades foram separadas por colaboração entre classes, sem necessidade de uma classe-pai no desenho atual. Uma hierarquia só faria sentido se existisse comportamento comum que justificasse compartilhá-la.
+Essa classe-base evita repetir a verificação de requisição POST e a lógica de redirecionamento nos controllers.
 
 ## 10. Na sua opinião, qual das duas versões apresenta melhor organização e por quê?
 
