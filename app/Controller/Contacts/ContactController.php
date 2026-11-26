@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
 require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
-require_once __DIR__ . '/../../Views/Components/global-messages.php';
+require_once __DIR__ . '/../../Support/global-messages.php';
 
 final class ContactController
 {
@@ -51,7 +51,6 @@ final class ContactController
     {
         $contacts = $this->contactService->listAll($this->conn, $this->userId);
 
-        $conn = $this->conn;
         require __DIR__ . '/../../Views/Contacts/list.php';
     }
 
@@ -69,7 +68,7 @@ final class ContactController
                 $this->redirect('created');
             }
 
-            $contact->fill($data);
+            $contact->fill($data, $this->userId);
             $error = $this->errorMessage();
             $errorField = $this->errorField();
         }
@@ -115,7 +114,7 @@ final class ContactController
 
     private function errorMessage(): string
     {
-        return GlobalMessages::get($this->contactService->getError(), 'Não foi possível salvar o contato. Tente novamente.');
+        return GlobalMessages::get($this->contactService->getError()) ?? (string) GlobalMessages::get('error');
     }
 
     private function errorField(): ?string
@@ -147,7 +146,6 @@ final class ContactController
         }
 
         $contacts = $this->contactService->listAll($this->conn, $this->userId);
-        $conn = $this->conn;
         require __DIR__ . '/../../Views/Contacts/delete.php';
     }
 

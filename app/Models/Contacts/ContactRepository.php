@@ -6,11 +6,10 @@ final class ContactRepository implements ContactRepositoryInterface
 {
     public function listAll(mysqli $conn, int $userId): array
     {
-        $sql = "SELECT c.id, c.user_id, c.name, c.phone, c.email, c.created_at, u.name AS owner_name, u.email AS owner_email
-                FROM contacts c
-                INNER JOIN users u ON u.id = c.user_id
-                WHERE c.user_id = ?
-                ORDER BY c.id";
+        $sql = "SELECT id, user_id, name, phone, email, created_at
+                FROM contacts
+                WHERE user_id = ?
+                ORDER BY id";
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
@@ -37,10 +36,9 @@ final class ContactRepository implements ContactRepositoryInterface
             return null;
         }
 
-        $sql = "SELECT c.id, c.user_id, c.name, c.phone, c.email, c.created_at, u.name AS owner_name, u.email AS owner_email
-                FROM contacts c
-                INNER JOIN users u ON u.id = c.user_id
-                WHERE c.id = ? AND c.user_id = ?";
+        $sql = "SELECT id, user_id, name, phone, email, created_at
+                FROM contacts
+                WHERE id = ? AND user_id = ?";
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
@@ -152,8 +150,6 @@ final class ContactRepository implements ContactRepositoryInterface
             'phone' => $row['phone'],
             'email' => $row['email'],
             'created_at' => $row['created_at'],
-            'owner_name' => $row['owner_name'] ?? null,
-            'owner_email' => $row['owner_email'] ?? null,
         ];
     }
 }

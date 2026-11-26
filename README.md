@@ -65,12 +65,12 @@ A conexão está definida diretamente em `app/Infrastructure/ConfigDatabase.php`
 | Configuração | Valor |
 | --- | --- |
 | Host | `127.0.0.1` |
-| Porta | `3309` |
+| Porta | `3306` |
 | Banco | `agenda` |
 | Usuário | `root` |
-| Senha | `root` |
+| Senha | vazia |
 
-Esses valores correspondem ao serviço definido em `docker-compose.yml`. Se alterar a configuração do serviço, atualize também os valores em `ConfigDatabase.php`.
+Esses valores correspondem ao XAMPP. Para usar o MySQL do Docker, altere manualmente a porta para `3309` e a senha para `root` em `ConfigDatabase.php`.
 
 ## Estrutura do projeto
 
@@ -79,6 +79,7 @@ app/
 ├── Controller/       # Fluxo de autenticação, usuários e contatos
 ├── Infrastructure/   # Conexão, autenticação de sessão e scripts SQL
 ├── Models/           # Entidades, serviços e repositórios
+├── Support/           # Mensagens compartilhadas da aplicação
 ├── Views/            # Telas PHP e estilos
 └── docs/             # Material de apoio do projeto
 docker-compose.yml    # Serviço MySQL

@@ -3,23 +3,16 @@
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
+require_once __DIR__ . '/../../Support/global-messages.php';
 
 final class AuthController
 {
-    private const MESSAGES = [
-        'error_login' => 'E-mail ou senha incorretos.',
-        'error_inactive' => 'Este usuário está inativo. Procure o administrador.',
-        'error_name' => 'Informe o seu nome.',
-        'error_email' => 'E-mail inválido. Verifique o endereço informado.',
-        'error_password' => 'A senha deve ter pelo menos 6 caracteres.',
-        'error_password_confirmation' => 'A confirmação não confere com a senha.',
-        'error_duplicate_email' => 'Já existe um usuário cadastrado com este e-mail.',
-    ];
-
+    private mysqli $conn;
     private UserService $userService;
 
-    public function __construct(private mysqli $conn)
+    public function initialize(mysqli $conn): void
     {
+        $this->conn = $conn;
         $this->userService = new UserService();
     }
 
@@ -41,7 +34,7 @@ final class AuthController
     private function login(): void
     {
         $error = null;
-        $notice = ($_GET['msg'] ?? '') === 'registered' ? 'Cadastro realizado. Faça login para continuar.' : null;
+        $notice = ($_GET['msg'] ?? '') === 'registered' ? GlobalMessages::get('registered') : null;
         $email = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -104,7 +97,13 @@ final class AuthController
 
     private function message(): string
     {
-        return AuthController::MESSAGES[$this->userService->getError() ?? ''] ?? 'Não foi possível concluir a operação. Tente novamente.';
+        $errorKey = match ($this->userService->getError()) {
+            'error_name' => 'error_auth_name',
+            'error_duplicate_email' => 'error_duplicate_user_email',
+            default => $this->userService->getError(),
+        };
+
+        return GlobalMessages::get($errorKey) ?? (string) GlobalMessages::get('error');
     }
 
     private function redirectHome(string $type): never
@@ -114,4 +113,6 @@ final class AuthController
     }
 }
 
-(new AuthController($conn))->dispatch($_GET['action'] ?? 'login');
+$controller = new AuthController();
+$controller->initialize($conn);
+$controller->dispatch($_GET['action'] ?? 'login');

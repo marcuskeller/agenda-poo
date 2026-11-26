@@ -107,8 +107,6 @@ final class ContactService
             'phone' => $row['phone'],
             'email' => $row['email'],
             'created_at' => $row['created_at'],
-            'owner_name' => $row['owner_name'] ?? null,
-            'owner_email' => $row['owner_email'] ?? null,
         ], (int) $row['user_id']);
 
         return $contact;

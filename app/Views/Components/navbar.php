@@ -3,10 +3,8 @@
 $esc = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
 
 $brandHref = $brandHref ?? 'ContactController.php?action=list';
-$headerCaption = $headerCaption ?? 'Organização pessoal / 01';
 $headerLinkHref = $headerLinkHref ?? 'ContactController.php?action=create';
 $headerLinkText = $headerLinkText ?? 'Novo contato';
-$showPlus = $showPlus ?? false;
 $hideHeaderLink = $hideHeaderLink ?? false;
 $currentUser = class_exists('Auth') ? Auth::user() : null;
 $logoutUrl = '../Auth/AuthController.php?action=logout';
@@ -20,7 +18,7 @@ $logoutUrl = '../Auth/AuthController.php?action=logout';
             </span>
         </a>
         <?php if (!$hideHeaderLink): ?>
-        <a class="header-link" href="<?= $esc($headerLinkHref) ?>"><?php if ($showPlus): ?><span class="header-link-mark" aria-hidden="true">+</span> <?php endif; ?><?= $esc($headerLinkText) ?></a>
+        <a class="header-link" href="<?= $esc($headerLinkHref) ?>"><?= $esc($headerLinkText) ?></a>
         <?php endif; ?>
         <?php if ($currentUser !== null): ?>
         <div class="header-user">

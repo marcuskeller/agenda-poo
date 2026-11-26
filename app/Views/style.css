@@ -96,7 +96,6 @@ input:focus-visible {
 }
 
 .brand-caption,
-.header-caption,
 .eyebrow,
 .table-heading,
 .field-label,
@@ -141,12 +140,6 @@ input:focus-visible {
     transform: translateY(-1px);
     color: var(--forest-deep);
     background: var(--lime);
-}
-
-.header-link-mark {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1;
 }
 
 .page-shell {
@@ -779,10 +772,6 @@ h1 {
         min-height: 39px;
         padding: 0 11px;
         font-size: 12px;
-    }
-
-    .header-link-mark {
-        font-size: 18px;
     }
 
     .page-shell {

@@ -3,15 +3,17 @@
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
-require_once __DIR__ . '/../../Views/Components/global-messages.php';
+require_once __DIR__ . '/../../Support/global-messages.php';
 
 final class UserController
 {
+    private mysqli $conn;
     private UserService $userService;
     private array $currentUser;
 
-    public function __construct(private mysqli $conn)
+    public function initialize(mysqli $conn): void
     {
+        $this->conn = $conn;
         $this->userService = new UserService();
         $this->currentUser = Auth::mustBe('ADMIN');
     }
@@ -101,4 +103,6 @@ final class UserController
     }
 }
 
-(new UserController($conn))->dispatch($_GET['action'] ?? 'list');
+$controller = new UserController();
+$controller->initialize($conn);
+$controller->dispatch($_GET['action'] ?? 'list');

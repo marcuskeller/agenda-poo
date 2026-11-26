@@ -6,10 +6,8 @@ $listUrl = 'ContactController.php?action=list';
 $editUrl = 'ContactController.php?action=edit';
 
 $brandHref = $listUrl;
-$headerCaption = 'Organização pessoal / 03';
 $headerLinkHref = $listUrl;
 $headerLinkText = 'Todos os contatos';
-$showPlus = false;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

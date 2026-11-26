@@ -2,32 +2,23 @@
 
 final class ContactEntity
 {
-    private $id = null;
-    private int $userId = 1;
+    private ?int $id = null;
+    private int $userId = 0;
     private string $name = '';
     private string $phone = '';
-    private $email = null;
-    private $createdAt = null;
-    private ?string $ownerName = null;
-    private ?string $ownerEmail = null;
+    private ?string $email = null;
+    private ?string $createdAt = null;
 
-    public function fill(array $data, int $userId = 1): void
+    public function fill(array $data, int $userId): void
     {
         $email = trim((string) ($data['email'] ?? ''));
 
-        $this->ownerName = $data['owner_name'] ?? null;
-        $this->ownerEmail = $data['owner_email'] ?? null;
         $this->id = isset($data['id']) && (int) $data['id'] > 0 ? (int) $data['id'] : null;
         $this->userId = $userId;
         $this->name = trim((string) ($data['name'] ?? ''));
         $this->phone = trim((string) ($data['phone'] ?? ''));
         $this->email = $email === '' ? null : $email;
         $this->createdAt = $data['created_at'] ?? null;
-    }
-
-    public function validate(): bool
-    {
-        return $this->validationError() === null;
     }
 
     public function validationError(): ?string
@@ -86,16 +77,6 @@ final class ContactEntity
     public function getCreatedAt(): ?string
     {
         return $this->createdAt;
-    }
-
-    public function getOwnerName(): ?string
-    {
-        return $this->ownerName;
-    }
-
-    public function getOwnerEmail(): ?string
-    {
-        return $this->ownerEmail;
     }
 
     public function toArray(): array

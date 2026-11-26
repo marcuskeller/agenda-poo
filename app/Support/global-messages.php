@@ -6,6 +6,7 @@ final class GlobalMessages
         'created' => 'Contato criado com sucesso.',
         'updated' => 'Contato atualizado com sucesso.',
         'user_updated' => 'Usuário atualizado com sucesso.',
+        'registered' => 'Cadastro realizado. Faça login para continuar.',
         'deleted' => 'Contato excluído com sucesso.',
         'activated' => 'Usuário reativado com sucesso.',
         'deactivated' => 'Usuário inativado com sucesso.',
@@ -18,6 +19,11 @@ final class GlobalMessages
         'error_duplicate_email' => 'Já existe um contato cadastrado com este e-mail.',
         'error_user_name' => 'Informe o nome do usuário.',
         'error_duplicate_user_email' => 'Já existe um usuário cadastrado com este e-mail.',
+        'error_login' => 'E-mail ou senha incorretos.',
+        'error_inactive' => 'Este usuário está inativo. Procure o administrador.',
+        'error_auth_name' => 'Informe o seu nome.',
+        'error_password' => 'A senha deve ter pelo menos 6 caracteres.',
+        'error_password_confirmation' => 'A confirmação não confere com a senha.',
     ];
 
     public static function get(?string $key, ?string $fallback = null): ?string

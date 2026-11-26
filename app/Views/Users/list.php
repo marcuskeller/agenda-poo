@@ -9,7 +9,6 @@ $editUrl = 'UserController.php?action=edit';
 $toggleUrl = 'UserController.php?action=toggle';
 
 $brandHref = $listUrl;
-$headerCaption = 'Administração / Usuários';
 $hideHeaderLink = true;
 ?>
 <!DOCTYPE html>

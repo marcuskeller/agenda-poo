@@ -6,10 +6,8 @@ $listUrl = 'UserController.php?action=list';
 $editUrl = 'UserController.php?action=edit';
 
 $brandHref = $listUrl;
-$headerCaption = 'Administração / Usuários';
 $headerLinkHref = $listUrl;
 $headerLinkText = 'Todos os usuários';
-$showPlus = false;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
