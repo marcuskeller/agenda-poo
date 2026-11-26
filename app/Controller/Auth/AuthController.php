@@ -95,13 +95,19 @@ final class AuthController extends BaseController
 
     private function message(): string
     {
+        $errorKey = $this->userService->getError();
+
+        if ($errorKey === '') {
+            $errorKey = 'error';
+        }
+
         $errorKey = match ($this->userService->getError()) {
             'error_name' => 'error_auth_name',
             'error_duplicate_email' => 'error_duplicate_user_email',
-            default => $this->userService->getError(),
+            default => $errorKey,
         };
 
-        return GlobalMessages::get($errorKey) ?? (string) GlobalMessages::get('error');
+        return GlobalMessages::get($errorKey);
     }
 
 }
