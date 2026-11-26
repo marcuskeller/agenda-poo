@@ -5,7 +5,7 @@ $e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES,
 $total = count($contacts);
 
 $messageKey = $_GET['msg'] ?? '';
-$notice = GlobalMessages::get($messageKey);
+$notice = $messageKey !== '' ? GlobalMessages::get($messageKey) : null;
 $noticeIsError = str_starts_with((string) $messageKey, 'error');
 
 $controllerUrl = 'ContactController.php';

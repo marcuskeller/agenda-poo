@@ -37,7 +37,7 @@ final class UserController extends BaseController
     {
         $users = $this->userService->listAll($this->conn);
         $messageKey = $_GET['msg'] ?? '';
-        $notice = GlobalMessages::get($messageKey === 'updated' ? 'user_updated' : $messageKey);
+        $notice = $messageKey !== '' ? GlobalMessages::get($messageKey === 'updated' ? 'user_updated' : $messageKey) : null;
         $noticeIsError = str_starts_with((string) $messageKey, 'error');
         $currentUserId = $this->currentUser['id'];
 
