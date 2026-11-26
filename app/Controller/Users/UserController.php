@@ -3,23 +3,10 @@
 require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
+require_once __DIR__ . '/../../Views/Components/global-messages.php';
 
 final class UserController
 {
-    private const MESSAGES = [
-        'updated' => 'Usuário atualizado com sucesso.',
-        'activated' => 'Usuário reativado com sucesso.',
-        'deactivated' => 'Usuário inativado com sucesso.',
-        'error' => 'Não foi possível concluir a operação.',
-        'error_self' => 'Você não pode inativar o seu próprio usuário.',
-    ];
-
-    private const FORM_MESSAGES = [
-        'error_name' => 'Informe o nome do usuário.',
-        'error_email' => 'E-mail inválido. Verifique o endereço informado.',
-        'error_duplicate_email' => 'Já existe um usuário cadastrado com este e-mail.',
-    ];
-
     private UserService $userService;
     private array $currentUser;
 
@@ -48,7 +35,7 @@ final class UserController
     {
         $users = $this->userService->listAll($this->conn);
         $messageKey = $_GET['msg'] ?? '';
-        $notice = UserController::MESSAGES[$messageKey] ?? null;
+        $notice = GlobalMessages::get($messageKey === 'updated' ? 'user_updated' : $messageKey);
         $noticeIsError = str_starts_with((string) $messageKey, 'error');
         $currentUserId = $this->currentUser['id'];
 
@@ -76,7 +63,13 @@ final class UserController
             }
 
             $user->fill(['id' => $id, 'type' => $user->getType(), 'active' => $user->isActive(), 'created_at' => $user->getCreatedAt()] + $data);
-            $error = UserController::FORM_MESSAGES[$this->userService->getError() ?? ''] ?? UserController::MESSAGES['error'];
+            $errorKey = match ($this->userService->getError()) {
+                'error_name' => 'error_user_name',
+                'error_email' => 'error_email',
+                'error_duplicate_email' => 'error_duplicate_user_email',
+                default => 'error',
+            };
+            $error = GlobalMessages::get($errorKey);
         }
 
         require __DIR__ . '/../../Views/Users/edit.php';

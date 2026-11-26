@@ -4,14 +4,17 @@ require_once __DIR__ . '/../../Infrastructure/ConfigDatabase.php';
 require_once __DIR__ . '/../../Infrastructure/Auth.php';
 require_once __DIR__ . '/../../Models/Contacts/ContactService.php';
 require_once __DIR__ . '/../../Models/Users/UserService.php';
+require_once __DIR__ . '/../../Views/Components/global-messages.php';
 
 final class ContactController
 {
+    private mysqli $conn;
     private ContactService $contactService;
     private int $userId;
 
-    public function __construct(private mysqli $conn)
+    public function initialize(mysqli $conn): void
     {
+        $this->conn = $conn;
         $this->contactService = new ContactService();
 
         $sessionUser = Auth::mustBe('USER');
@@ -112,15 +115,7 @@ final class ContactController
 
     private function errorMessage(): string
     {
-        $messages = [
-            'error_name' => 'Informe o nome do contato.',
-            'error_phone' => 'Telefone inválido. Informe DDD e número (10 a 13 dígitos).',
-            'error_email' => 'E-mail inválido. Verifique o endereço informado.',
-            'error_duplicate_phone' => 'Já existe um contato cadastrado com este telefone.',
-            'error_duplicate_email' => 'Já existe um contato cadastrado com este e-mail.',
-        ];
-
-        return $messages[$this->contactService->getError() ?? ''] ?? 'Não foi possível salvar o contato. Tente novamente.';
+        return GlobalMessages::get($this->contactService->getError(), 'Não foi possível salvar o contato. Tente novamente.');
     }
 
     private function errorField(): ?string
@@ -163,4 +158,6 @@ final class ContactController
     }
 }
 
-(new ContactController($conn))->dispatch($_GET['action'] ?? 'list');
+$controller = new ContactController();
+$controller->initialize($conn);
+$controller->dispatch($_GET['action'] ?? 'list');

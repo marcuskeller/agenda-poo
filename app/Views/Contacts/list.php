@@ -4,19 +4,8 @@ $e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES,
 
 $total = count($contacts);
 
-$messages = [
-    'created' => 'Contato criado com sucesso.',
-    'updated' => 'Contato atualizado com sucesso.',
-    'deleted' => 'Contato excluído com sucesso.',
-    'error' => 'Não foi possível concluir a operação. Verifique os dados e tente novamente.',
-    'error_name' => 'Informe o nome do contato.',
-    'error_phone' => 'Telefone inválido. Informe DDD e número (10 a 13 dígitos).',
-    'error_email' => 'E-mail inválido. Verifique o endereço informado.',
-    'error_duplicate_phone' => 'Já existe um contato cadastrado com este telefone.',
-    'error_duplicate_email' => 'Já existe um contato cadastrado com este e-mail.',
-];
 $messageKey = $_GET['msg'] ?? '';
-$notice = $messages[$messageKey] ?? null;
+$notice = GlobalMessages::get($messageKey);
 $noticeIsError = str_starts_with((string) $messageKey, 'error');
 
 $controllerUrl = 'ContactController.php';
