@@ -1,7 +1,6 @@
 <?php
 
 $e = static fn ($value): string => htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-
 $total = count($contacts);
 
 $listUrl = 'ContactController.php?action=list';
@@ -24,6 +23,11 @@ $hideHeaderLink = true;
 <?php require_once __DIR__ . '/../Components/navbar.php'; ?>
 
     <main class="page-shell">
+        <section class="welcome" aria-label="Boas-vindas">
+            <p class="eyebrow">Boas-vindas</p>
+            <p class="welcome-text">Bem-vindo(a), <strong><?= $e(Auth::user()['name'] ?? '') ?></strong>!</p>
+        </section>
+
         <section class="page-intro" aria-labelledby="page-title">
             <div>
                 <p class="eyebrow">Visão geral</p>
@@ -34,48 +38,58 @@ $hideHeaderLink = true;
         <section class="surface" aria-labelledby="contacts-title">
             <div class="surface-heading">
                 <h2 class="surface-title" id="contacts-title">Sua agenda</h2>
-                <span class="record-count"><?= $total ?> registro<?= $total === 1 ? '' : 's' ?></span>
+                <div class="surface-actions">
+                    <span class="record-count"><?= $total ?> registro<?= $total === 1 ? '' : 's' ?></span>
+                    <?php if ($total > 0): ?>
+                        <a class="button-primary" href="<?= $e($createUrl) ?>">Adicionar contato</a>
+                    <?php endif; ?>
+                </div>
             </div>
 
-            <div class="table-scroll">
-                <table class="contacts-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Nome</th>
-                            <th scope="col">Telefone</th>
-                            <th scope="col">E-mail</th>
-                            <th scope="col">Cadastro</th>
-                            <th scope="col">Cadastrado por</th>
-                            <th scope="col">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($contacts as $item): ?>
-                            <?php
-                            $itemId = (int) $item->getId();
-                            $date = $item->getCreatedAt()
-                                ? date('d/m/Y \à\s H:i', strtotime($item->getCreatedAt()))
-                                : '—';
-                            ?>
+            <?php if ($total === 0): ?>
+                <div class="empty-state">
+                    <a class="empty-mark" href="<?= $e($createUrl) ?>" aria-label="Adicionar contato">+</a>
+                    <h3 class="empty-title">Nenhum contato ainda</h3>
+                    <p class="empty-copy">Sua agenda está vazia. Cadastre o primeiro contato para começar.</p>
+                    <a class="button-primary" href="<?= $e($createUrl) ?>">Adicionar contato</a>
+                </div>
+            <?php else: ?>
+                <div class="table-scroll">
+                    <table class="contacts-table">
+                        <thead>
                             <tr>
-                                <td class="contact-id" data-label="ID"><?= sprintf('#%03d', $itemId) ?></td>
-                                <td class="contact-name" data-label="Nome"><?= $e($item->getName()) ?></td>
-                                <td data-label="Telefone"><?= $e($item->getPhone()) ?></td>
-                                <td class="contact-email" data-label="E-mail"><?= $item->getEmail() !== null ? $e($item->getEmail()) : '—' ?></td>
-                                <td class="contact-date" data-label="Cadastro"><?= $e($date) ?></td>
-                                <td data-label="Cadastrado por"><?= $e($item->getOwnerName()) ?> <span class="field-hint">(<?= $e($item->getOwnerEmail()) ?>)</span></td>
-                                <td data-label="Ações">
-                                    <div class="row-actions">
-                                        <a class="row-action" href="<?= $e($editUrl) ?>?id=<?= $itemId ?>">Editar</a>
-                                        <a class="row-action row-action--delete" href="<?= $e($deleteUrl) ?>?id=<?= $itemId ?>">Excluir</a>
-                                    </div>
-                                </td>
+                                <th scope="col">Nome</th>
+                                <th scope="col">Telefone</th>
+                                <th scope="col">E-mail</th>
+                                <th scope="col">Cadastro</th>
+                                <th scope="col">Ações</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contacts as $item): ?>
+                                <?php
+                                $itemId = (int) $item->getId();
+                                $date = $item->getCreatedAt()
+                                    ? date('d/m/Y à\s H:i', strtotime($item->getCreatedAt()))
+                                    : '—';
+                                ?>
+                                <tr>
+                                    <td class="contact-name" data-label="Nome"><?= $e($item->getName()) ?></td>
+                                    <td data-label="Telefone"><?= $e($item->getPhone()) ?></td>
+                                    <td class="contact-email" data-label="E-mail"><?= $item->getEmail() !== null ? $e($item->getEmail()) : '—' ?></td>
+                                    <td class="contact-date" data-label="Cadastro"><?= $e($date) ?></td>
+                                    <td data-label="Ações">
+                                        <div class="row-actions">
+                                            <a class="row-action" href="<?= $e($editUrl) ?>&amp;id=<?= $itemId ?>">Editar</a>
+                                            <a class="row-action row-action--delete" href="<?= $e($deleteUrl) ?>&amp;id=<?= $itemId ?>">Excluir</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
         </section>
     </main>
 

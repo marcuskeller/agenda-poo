@@ -53,7 +53,7 @@ $hideHeaderLink = true;
         </section>
 
         <?php if ($notice !== null): ?>
-            <p class="notice <?= $noticeIsError ? 'notice--error' : 'notice--success' ?>" role="<?= $noticeIsError ? 'alert' : 'status' ?>">
+            <p class="notice <?= $noticeIsError ? 'notice--error' : 'notice--success' ?>" role="<?= $noticeIsError ? 'alert' : 'status' ?>" <?= !$noticeIsError ? 'data-auto-dismiss' : '' ?>>
                 <span class="notice-mark" aria-hidden="true"><?= $noticeIsError ? '!' : '&#10003;' ?></span>
                 <?= $e($notice) ?>
             </p>
@@ -62,7 +62,12 @@ $hideHeaderLink = true;
         <section class="surface" aria-labelledby="contacts-title">
             <div class="surface-heading">
                 <h2 class="surface-title" id="contacts-title">Sua agenda</h2>
-                <span class="record-count"><?= $total ?> registro<?= $total === 1 ? '' : 's' ?></span>
+                <div class="surface-actions">
+                    <span class="record-count"><?= $total ?> registro<?= $total === 1 ? '' : 's' ?></span>
+                    <?php if ($total > 0): ?>
+                        <a class="button-primary" href="<?= $e($createUrl) ?>">Adicionar contato</a>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <?php if ($total === 0): ?>
@@ -113,5 +118,16 @@ $hideHeaderLink = true;
     </main>
 
 <?php require_once __DIR__ . '/../Components/footer.php'; ?>
+<?php if ($notice !== null && !$noticeIsError): ?>
+<script>
+    window.setTimeout(() => {
+        const notice = document.querySelector('[data-auto-dismiss]');
+        if (!notice) return;
+
+        notice.classList.add('notice--dismissed');
+        window.setTimeout(() => notice.remove(), 300);
+    }, 3000);
+</script>
+<?php endif; ?>
 </body>
 </html>

@@ -254,6 +254,12 @@ h1 {
     font-weight: 400;
 }
 
+.surface-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .record-count {
     color: var(--muted);
     font-size: 13px;
@@ -363,6 +369,12 @@ h1 {
     color: var(--forest-deep);
     background: #e8f2dc;
     font-size: 14px;
+}
+
+.notice--dismissed {
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 300ms ease, transform 300ms ease;
 }
 
 .empty-state {
