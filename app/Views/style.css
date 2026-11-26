@@ -357,6 +357,14 @@ h1 {
     background: #fff2ef;
 }
 
+.row-action--restore {
+    color: var(--forest);
+}
+
+.row-action--restore:hover {
+    background: #f0f7e4;
+}
+
 .row-actions form {
     margin: 0;
 }

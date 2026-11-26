@@ -98,7 +98,7 @@ $hideHeaderLink = true;
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
             <p class="modal-marker">! Confirmar exclusão</p>
             <h2 class="modal-title" id="modal-title">Excluir contato?</h2>
-            <p class="modal-copy" id="modal-desc">Deseja excluir <?= $e($contact->getName()) ?> da sua agenda?</p>
+            <p class="modal-copy" id="modal-desc">Deseja excluir <strong><?= $e($contact->getName()) ?></strong> da sua agenda?</p>
             <p class="modal-copy modal-copy--note">Esta ação não pode ser desfeita.</p>
             <div class="modal-actions">
                 <a class="button-secondary" href="<?= $e($listUrl) ?>">Cancelar</a>

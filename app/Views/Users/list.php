@@ -37,7 +37,7 @@ $hideHeaderLink = true;
         </section>
 
         <?php if ($notice !== null): ?>
-            <p class="notice <?= $noticeIsError ? 'notice--error' : 'notice--success' ?>" role="<?= $noticeIsError ? 'alert' : 'status' ?>">
+            <p class="notice <?= $noticeIsError ? 'notice--error' : 'notice--success' ?>" role="<?= $noticeIsError ? 'alert' : 'status' ?>" <?= !$noticeIsError ? 'data-auto-dismiss' : '' ?>>
                 <span class="notice-mark" aria-hidden="true"><?= $noticeIsError ? '!' : '&#10003;' ?></span>
                 <?= $e($notice) ?>
             </p>
@@ -83,7 +83,7 @@ $hideHeaderLink = true;
                                         <?php if ($itemId !== $currentUserId): ?>
                                             <form action="<?= $e($toggleUrl) ?>" method="post">
                                                 <input type="hidden" name="id" value="<?= $itemId ?>">
-                                                <button class="row-action row-action--delete" type="submit"><?= $item->isActive() ? 'Inativar' : 'Reativar' ?></button>
+                                                <button class="row-action <?= $item->isActive() ? 'row-action--delete' : 'row-action--restore' ?>" type="submit"><?= $item->isActive() ? 'Inativar' : 'Reativar' ?></button>
                                             </form>
                                         <?php endif; ?>
                                     </div>
@@ -97,5 +97,16 @@ $hideHeaderLink = true;
     </main>
 
 <?php require_once __DIR__ . '/../Components/footer.php'; ?>
+<?php if ($notice !== null && !$noticeIsError): ?>
+<script>
+    window.setTimeout(() => {
+        const notice = document.querySelector('[data-auto-dismiss]');
+        if (!notice) return;
+
+        notice.classList.add('notice--dismissed');
+        window.setTimeout(() => notice.remove(), 300);
+    }, 3000);
+</script>
+<?php endif; ?>
 </body>
 </html>
