@@ -56,7 +56,7 @@ $hideHeaderLink = true;
 
                 <div class="form-actions form-actions--end">
                     <div class="form-action-group">
-                        <a class="button-link" href="ContactController.php?action=list">Cancelar</a>
+                        <a class="button-secondary" href="ContactController.php?action=list">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar contato</button>
                     </div>
                 </div>

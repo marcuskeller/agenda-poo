@@ -63,7 +63,7 @@ $headerLinkText = 'Todos os contatos';
 
                 <div class="form-actions form-actions--end">
                     <div class="form-action-group">
-                        <a class="button-link" href="<?= $e($listUrl) ?>">Cancelar</a>
+                        <a class="button-secondary" href="<?= $e($listUrl) ?>">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar alterações</button>
                     </div>
                 </div>

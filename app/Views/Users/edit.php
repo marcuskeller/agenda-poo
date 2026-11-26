@@ -55,7 +55,7 @@ $headerLinkText = 'Todos os usuários';
                 <div class="form-actions">
                     <p class="form-note"><span class="required-mark" aria-hidden="true">*</span> Campos obrigatórios</p>
                     <div class="form-action-group">
-                        <a class="button-link" href="<?= $e($listUrl) ?>">Cancelar</a>
+                        <a class="button-secondary" href="<?= $e($listUrl) ?>">Cancelar</a>
                         <button class="button-primary" type="submit">Salvar alterações</button>
                     </div>
                 </div>
