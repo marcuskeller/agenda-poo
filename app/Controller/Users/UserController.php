@@ -88,7 +88,13 @@ final class UserController extends BaseController
         $active = $this->userService->toggleActive($this->conn, $id, $this->currentUser['id']);
 
         if ($active === null) {
-            $this->redirect($this->userService->getError() ?? 'error');
+            $errorKey = $this->userService->getError();
+
+            if ($errorKey === '') {
+                $errorKey = 'error';
+            }
+
+            $this->redirect($errorKey);
         }
 
         $this->redirect($active ? 'activated' : 'deactivated');

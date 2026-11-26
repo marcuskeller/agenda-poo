@@ -5,18 +5,20 @@ require_once __DIR__ . '/ContactRepository.php';
 
 final class ContactService
 {
-    private ?string $error = null;
+    private string $error = '';
 
-    public function getError(): ?string
+    public function getError(): string
     {
         return $this->error;
     }
 
     private function persist(mysqli $conn, ContactRepository $repository, ContactEntity $contact): bool
     {
-        $this->error = $contact->validationError();
+        $this->error = '';
+        $validationError = $contact->validationError();
 
-        if ($this->error !== null) {
+        if ($validationError !== null) {
+            $this->error = $validationError;
             return false;
         }
 

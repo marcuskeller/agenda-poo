@@ -34,17 +34,25 @@ final class GlobalMessages
         'error_password_confirmation' => 'A confirmação não confere com a senha.',
     ];
 
-    public static function get(?string $key, ?string $fallback = null): ?string
+    public static function get(string $key): string
     {
-        if ($key === null || $key === '') {
-            return $fallback;
+        if (isset(self::MESSAGES[$key])) {
+            return self::MESSAGES[$key];
         }
 
-        return self::MESSAGES[$key] ?? $fallback;
+        return self::MESSAGES['error'];
     }
 
     public static function fieldFor(?string $key): ?string
     {
-        return self::ERROR_FIELDS[$key ?? ''] ?? null;
+        if ($key === null) {
+            return null;
+        }
+
+        if (isset(self::ERROR_FIELDS[$key])) {
+            return self::ERROR_FIELDS[$key];
+        }
+
+        return null;
     }
 }

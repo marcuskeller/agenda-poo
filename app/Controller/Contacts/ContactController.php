@@ -113,13 +113,13 @@ final class ContactController extends BaseController
 
     private function errorMessage(): string
     {
-        $message = GlobalMessages::get($this->contactService->getError());
+        $errorKey = $this->contactService->getError();
 
-        if ($message === null) {
-            $message = GlobalMessages::get('error');
+        if ($errorKey === '') {
+            $errorKey = 'error';
         }
 
-        return (string) $message;
+        return GlobalMessages::get($errorKey);
     }
 
     private function delete(): void

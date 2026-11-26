@@ -5,9 +5,9 @@ require_once __DIR__ . '/UserRepository.php';
 
 final class UserService
 {
-    private ?string $error = null;
+    private string $error = '';
 
-    public function getError(): ?string
+    public function getError(): string
     {
         return $this->error;
     }
@@ -58,7 +58,7 @@ final class UserService
 
     public function toggleActive(mysqli $conn, int $id, int $currentUserId): ?bool
     {
-        $this->error = null;
+        $this->error = '';
 
         if ($id === $currentUserId) {
             $this->error = 'error_self';
@@ -87,7 +87,7 @@ final class UserService
 
     public function authenticate(mysqli $conn, string $email, string $password): ?array
     {
-        $this->error = null;
+        $this->error = '';
         $row = (new UserRepository())->findByEmail($conn, strtolower(trim($email)));
 
         if ($row === null || !hash_equals($row['password_hash'], md5($password))) {
@@ -107,9 +107,11 @@ final class UserService
 
     private function persist(UserEntity $user, UserRepository $repository, bool $requirePassword, mysqli $conn): bool
     {
-        $this->error = $user->validationError($requirePassword);
+        $this->error = '';
+        $validationError = $user->validationError($requirePassword);
 
-        if ($this->error !== null) {
+        if ($validationError !== null) {
+            $this->error = $validationError;
             return false;
         }
 
