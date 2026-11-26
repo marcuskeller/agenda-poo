@@ -167,6 +167,7 @@
         .diagram .stereotype { fill: var(--muted); font: 13px "Trebuchet MS", sans-serif; text-anchor: middle; }
         .diagram .member { fill: var(--ink); font: 15px Consolas, "Courier New", monospace; }
         .diagram .relation { fill: none; stroke: var(--forest); stroke-width: 1.6; stroke-dasharray: 6 4; }
+        .diagram .inheritance { fill: none; stroke: var(--forest); stroke-width: 1.6; }
         .diagram .arrow { fill: none; stroke: var(--forest); stroke-width: 1.5; }
         .diagram .triangle { fill: #fff; stroke: var(--forest); stroke-width: 1.5; }
         .diagram-note { margin-top: 10px; font-size: 13px; }
@@ -385,7 +386,7 @@ public function getName(): string
             <div class="diagram-scroll" tabindex="0" role="region" aria-label="Diagrama de contatos; role horizontalmente para ver o desenho completo">
                 <svg class="diagram" viewBox="0 0 1100 450" role="img" aria-labelledby="contacts-title contacts-desc">
                     <title id="contacts-title">Diagrama de classes de contatos</title>
-                    <desc id="contacts-desc">ContactController herda de BaseController e usa ContactService. BaseController concentra a conexão e operações HTTP comuns. ContactService usa ContactEntity e ContactRepository. ContactRepository implementa ContactRepositoryInterface. São exibidos apenas alguns membros; ContactController também utiliza Auth e UserService, apresentados no próximo diagrama.</desc>
+                    <desc id="contacts-desc">ContactController herda de BaseController e usa ContactService. BaseController concentra a conexão e operações HTTP comuns. ContactService usa ContactEntity e ContactRepository. ContactRepository implementa ContactRepositoryInterface. São exibidos apenas alguns membros; ContactController também utiliza Auth, UserService e GlobalMessages.</desc>
                     <defs>
                         <marker id="contact-use" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path class="arrow" d="M1 1 L10 6 L1 11"/></marker>
                         <marker id="contact-implements" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path class="triangle" d="M1 1 L12 7 L1 13 Z"/></marker>
@@ -394,6 +395,7 @@ public function getName(): string
                     <path class="relation" d="M540 230 V300" marker-end="url(#contact-use)"/>
                     <path class="relation" d="M690 155 H715 V355 H740" marker-end="url(#contact-use)"/>
                     <path class="relation" d="M895 285 V160" marker-end="url(#contact-implements)"/>
+                    <path class="inheritance" d="M180 230 V300" marker-end="url(#contact-implements)"/>
 
                     <g transform="translate(30 85)">
                         <rect class="box" width="300" height="145"/><rect class="header" x="1" y="1" width="298" height="34"/><path class="divider" d="M0 35 H300 M0 75 H300"/>
@@ -415,6 +417,13 @@ public function getName(): string
                         <text class="member" x="12" y="58">− name: string</text><text class="member" x="12" y="77">− phone: string</text>
                         <text class="member" x="12" y="109">+ validationError(): ?string</text>
                     </g>
+                    <g transform="translate(30 300)">
+                        <rect class="box" width="300" height="135"/><rect class="header" x="1" y="1" width="298" height="52"/><path class="divider" d="M0 53 H300 M0 85 H300"/>
+                        <text class="stereotype" x="150" y="20">«abstract»</text><text class="class-name" x="150" y="42">BaseController</text>
+                        <text class="member" x="12" y="75"># conn: mysqli</text>
+                        <text class="member" x="12" y="109"># isPost(): bool</text>
+                        <text class="member" x="12" y="128"># redirectTo(url): void</text>
+                    </g>
                     <g transform="translate(740 285)">
                         <rect class="box" width="310" height="150"/><rect class="header" x="1" y="1" width="308" height="34"/><path class="divider" d="M0 35 H310 M0 53 H310"/>
                         <text class="class-name" x="155" y="24">ContactRepository</text>
@@ -427,7 +436,7 @@ public function getName(): string
                     </g>
                 </svg>
             </div>
-            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; seta tracejada aberta = usa; triângulo tracejado = implementa interface. Membros e relações selecionados; <code>…</code> omite parâmetros. <code>ContactController</code> herda de <code>BaseController</code>. Em telas pequenas, role o diagrama horizontalmente. O controller também usa <code>Auth</code> e <code>UserService</code>.</p>
+            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; # protegido; seta tracejada aberta = usa; triângulo tracejado = implementa interface; triângulo contínuo = herda. Membros e relações selecionados; <code>…</code> omite parâmetros. Em telas pequenas, role o diagrama horizontalmente. O controller também usa <code>Auth</code>, <code>UserService</code> e <code>GlobalMessages</code>.</p>
         </section>
 
         <section class="slide diagram-slide" aria-labelledby="slide-10">
@@ -436,18 +445,20 @@ public function getName(): string
             <div class="diagram-scroll" tabindex="0" role="region" aria-label="Diagrama de usuários e autenticação; role horizontalmente para ver o desenho completo">
                 <svg class="diagram" viewBox="0 0 1100 530" role="img" aria-labelledby="users-title users-desc">
                     <title id="users-title">Diagrama de classes de usuários e autenticação</title>
-                    <desc id="users-desc">AuthController e UserController herdam de BaseController e usam UserService e Auth. BaseController concentra a conexão e operações HTTP comuns. UserService usa UserEntity e UserRepository. UserRepository implementa UserRepositoryInterface. Apenas alguns membros e relações são exibidos.</desc>
+                    <desc id="users-desc">AuthController e UserController herdam de BaseController e usam UserService e Auth. BaseController concentra a conexão e operações HTTP comuns. UserService usa UserEntity e UserRepository. UserRepository implementa UserRepositoryInterface. Os controllers também utilizam GlobalMessages. Apenas alguns membros e relações são exibidos.</desc>
                     <defs>
                         <marker id="user-use" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" orient="auto" markerUnits="userSpaceOnUse"><path class="arrow" d="M1 1 L10 6 L1 11"/></marker>
                         <marker id="user-implements" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path class="triangle" d="M1 1 L12 7 L1 13 Z"/></marker>
                     </defs>
-                    <path class="relation" d="M170 155 V185 H455 V215" marker-end="url(#user-use)"/>
+                    <path class="relation" d="M320 90 H350 V200 H455 V215" marker-end="url(#user-use)"/>
                     <path class="relation" d="M540 155 V215" marker-end="url(#user-use)"/>
                     <path class="relation" d="M170 25 V10 H910 V25" marker-end="url(#user-use)"/>
                     <path class="relation" d="M690 90 H760" marker-end="url(#user-use)"/>
-                    <path class="relation" d="M390 280 H170 V380" marker-end="url(#user-use)"/>
+                    <path class="relation" d="M455 345 V360 H170 V380" marker-end="url(#user-use)"/>
                     <path class="relation" d="M540 345 V380" marker-end="url(#user-use)"/>
                     <path class="relation" d="M690 445 H760" marker-end="url(#user-implements)"/>
+                    <path class="inheritance" d="M170 155 V215" marker-end="url(#user-implements)"/>
+                    <path class="inheritance" d="M450 155 V175 H260 V215" marker-end="url(#user-implements)"/>
 
                     <g transform="translate(20 25)">
                         <rect class="box" width="300" height="130"/><rect class="header" x="1" y="1" width="298" height="34"/><path class="divider" d="M0 35 H300 M0 75 H300"/>
@@ -465,7 +476,14 @@ public function getName(): string
                         <rect class="box" width="300" height="130"/><rect class="header" x="1" y="1" width="298" height="34"/><path class="divider" d="M0 35 H300 M0 53 H300"/>
                         <text class="class-name" x="150" y="24">Auth</text>
                         <text class="member" x="12" y="78">+ login(user): void {static}</text>
-                        <text class="member" x="12" y="102">+ requireAdmin(): array {static}</text>
+                        <text class="member" x="12" y="102">+ mustBe(type): array {static}</text>
+                    </g>
+                    <g transform="translate(20 215)">
+                        <rect class="box" width="300" height="130"/><rect class="header" x="1" y="1" width="298" height="52"/><path class="divider" d="M0 53 H300 M0 80 H300"/>
+                        <text class="stereotype" x="150" y="20">«abstract»</text><text class="class-name" x="150" y="42">BaseController</text>
+                        <text class="member" x="12" y="72"># conn: mysqli</text>
+                        <text class="member" x="12" y="103"># isPost(): bool</text>
+                        <text class="member" x="12" y="122"># redirectTo(url): void</text>
                     </g>
                     <g transform="translate(390 215)">
                         <rect class="box" width="300" height="130"/><rect class="header" x="1" y="1" width="298" height="34"/><path class="divider" d="M0 35 H300 M0 70 H300"/>
@@ -492,7 +510,7 @@ public function getName(): string
                     </g>
                 </svg>
             </div>
-            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; seta tracejada aberta = usa; triângulo tracejado = implementa interface; <code>{static}</code> = método estático. <code>AuthController</code> e <code>UserController</code> herdam de <code>BaseController</code>. Membros e relações selecionados; <code>…</code> omite parâmetros. Em telas pequenas, role o diagrama horizontalmente.</p>
+            <p class="note diagram-note"><strong>Legenda:</strong> + público; − privado; # protegido; seta tracejada aberta = usa; triângulo tracejado = implementa interface; triângulo contínuo = herda; <code>{static}</code> = método estático. Membros e relações selecionados; <code>…</code> omite parâmetros. Os controllers também usam <code>GlobalMessages</code>. Em telas pequenas, role o diagrama horizontalmente.</p>
         </section>
 
         <section class="slide" aria-labelledby="slide-11">

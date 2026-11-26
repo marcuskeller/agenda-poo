@@ -1,0 +1,194 @@
+classDiagram
+    direction LR
+
+    class BaseController {
+        <<abstract>>
+        #mysqli conn
+        #setConnection(mysqli conn) void
+        #isPost() bool
+        #redirectTo(string url) void
+    }
+
+    class ContactController {
+        -ContactService contactService
+        -int userId
+        +initialize(mysqli conn) void
+        +dispatch(string action) void
+        -index() void
+        -create() void
+        -edit() void
+        -formData() array
+        -errorMessage() string
+        -delete() void
+        -redirect(string message) void
+    }
+
+    class AuthController {
+        -UserService userService
+        +initialize(mysqli conn) void
+        +dispatch(string action) void
+        -login() void
+        -register() void
+        -logout() void
+        -message() string
+    }
+
+    class UserController {
+        -UserService userService
+        -array currentUser
+        +initialize(mysqli conn) void
+        +dispatch(string action) void
+        -index() void
+        -edit() void
+        -toggle() void
+        -redirect(string message) void
+    }
+
+    class ContactEntity {
+        -?int id
+        -int userId
+        -string name
+        -string phone
+        -?string email
+        -?string createdAt
+        +fill(array data, int userId) void
+        +validationError() ?string
+        -validatePhone() bool
+        +getId() ?int
+        +getUserId() int
+        +getName() string
+        +getPhone() string
+        +getEmail() ?string
+        +getCreatedAt() ?string
+        +toArray() array
+        -validateName() bool
+        -validateEmail() bool
+    }
+
+    class ContactService {
+        -?string error
+        +getError() ?string
+        -persist(mysqli conn, ContactRepository repository, ContactEntity contact) bool
+        +listAll(mysqli conn, int userId) array
+        +findById(mysqli conn, int id, int userId) ?ContactEntity
+        +create(mysqli conn, int userId, array data) bool
+        +update(mysqli conn, int userId, int id, array data) bool
+        +delete(mysqli conn, int userId, int id) bool
+        -createContactFromRow(array row) ContactEntity
+    }
+
+    class ContactRepositoryInterface {
+        <<interface>>
+        +listAll(mysqli conn, int userId) array
+        +findById(mysqli conn, int id, int userId) ?array
+        +insert(mysqli conn, array contact) bool
+        +update(mysqli conn, int id, array contact) bool
+        +delete(mysqli conn, int id, int userId) bool
+        +findDuplicateField(mysqli conn, int userId, string phone, ?string email, int excludeId = 0) ?string
+    }
+
+    class ContactRepository {
+        +listAll(mysqli conn, int userId) array
+        +findById(mysqli conn, int id, int userId) ?array
+        +insert(mysqli conn, array contact) bool
+        +update(mysqli conn, int id, array contact) bool
+        +delete(mysqli conn, int id, int userId) bool
+        +findDuplicateField(mysqli conn, int userId, string phone, ?string email, int excludeId = 0) ?string
+        -hydrate(array row) array
+    }
+
+    class UserEntity {
+        -?int id
+        -string name
+        -string email
+        -string password
+        -string passwordConfirmation
+        -string type
+        -bool active
+        -?string createdAt
+        +fill(array data) void
+        +validationError(bool requirePassword = true) ?string
+        +getId() ?int
+        +getName() string
+        +getEmail() string
+        +getPassword() string
+        +getType() string
+        +isActive() bool
+        +getCreatedAt() ?string
+        +toArray() array
+    }
+
+    class UserService {
+        -?string error
+        +getError() ?string
+        +listAll(mysqli conn) array
+        +findById(mysqli conn, int id) ?UserEntity
+        +register(mysqli conn, array data) bool
+        +update(mysqli conn, int id, array data) bool
+        +toggleActive(mysqli conn, int id, int currentUserId) ?bool
+        +authenticate(mysqli conn, string email, string password) ?array
+        -persist(UserEntity user, UserRepository repository, bool requirePassword, mysqli conn) bool
+        -toEntity(array row) UserEntity
+    }
+
+    class UserRepositoryInterface {
+        <<interface>>
+        +listAll(mysqli conn) array
+        +findById(mysqli conn, int id) ?array
+        +findByEmail(mysqli conn, string email) ?array
+        +insert(mysqli conn, array user) bool
+        +update(mysqli conn, int id, array user) bool
+        +setActive(mysqli conn, int id, bool active) bool
+    }
+
+    class UserRepository {
+        -const COLUMNS
+        +listAll(mysqli conn) array
+        +findById(mysqli conn, int id) ?array
+        +findByEmail(mysqli conn, string email) ?array
+        +insert(mysqli conn, array user) bool
+        +update(mysqli conn, int id, array user) bool
+        +setActive(mysqli conn, int id, bool active) bool
+        -findOne(mysqli conn, string where, string types, value) ?array
+        -hydrate(array row) array
+    }
+
+    class Auth {
+        +const LOGIN_URL
+        +login(array user) void$
+        +logout() void$
+        +user() ?array$
+        +mustBe(string type) array$
+        +home(string type) string$
+        -start() void$
+        -redirect(string url) void$
+    }
+
+    class GlobalMessages {
+        -const ERROR_FIELDS
+        -const MESSAGES
+        +get(?string key, ?string fallback = null) ?string$
+        +fieldFor(?string key) ?string$
+    }
+
+    BaseController <|-- ContactController
+    BaseController <|-- AuthController
+    BaseController <|-- UserController
+    ContactRepositoryInterface <|.. ContactRepository : implementa
+    UserRepositoryInterface <|.. UserRepository : implementa
+
+    ContactController ..> ContactService : usa
+    ContactController ..> ContactEntity : usa
+    ContactController ..> UserService : usa
+    ContactController ..> Auth : usa
+    ContactController ..> GlobalMessages : usa
+    AuthController ..> UserService : usa
+    AuthController ..> Auth : usa
+    AuthController ..> GlobalMessages : usa
+    UserController ..> UserService : usa
+    UserController ..> Auth : usa
+    UserController ..> GlobalMessages : usa
+    ContactService ..> ContactEntity : usa
+    ContactService ..> ContactRepository : usa
+    UserService ..> UserEntity : usa
+    UserService ..> UserRepository : usa
